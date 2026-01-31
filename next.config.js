@@ -1,17 +1,12 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**'
-      },
-      {
-        protocol: 'http',
-        hostname: '**'
-      }
-    ]
-  }
-};
+  /* config options here */
+  eslint: {
+    // Disable quote escaping rule during builds
+    ignoreDuringBuilds: false,
+  },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

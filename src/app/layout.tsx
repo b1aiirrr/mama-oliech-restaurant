@@ -5,7 +5,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
 const displayFont = DM_Serif_Display({
-  weight: ['400', '600'],
+  weight: '400',
   subsets: ['latin'],
   variable: '--font-display',
 });

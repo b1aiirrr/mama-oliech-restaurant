@@ -20,7 +20,7 @@ export function Header() {
       <nav className="container-wide px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
         <div className="flex items-center justify-between h-20 sm:h-24">
           <Link
-            href="#hero"
+            href="/"
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
             <Image
@@ -35,8 +35,8 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Desktop nav */}
-          <ul className="hidden md:flex items-center gap-8">
+          {/* Desktop Nav Links */}
+          <ul className="hidden md:flex items-center gap-8 mr-auto ml-12">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
@@ -47,59 +47,61 @@ export function Header() {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href="#menu" className="btn-primary text-base py-3 px-6">
-                View Menu
-              </Link>
-            </li>
-            <li>
-              <CartButton />
-            </li>
           </ul>
 
-          {/* Mobile menu button */}
-          <button
-            type="button"
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden p-2 rounded-lg text-charcoal hover:bg-terracotta-100 focus:outline-none focus:ring-2 focus:ring-terracotta-500 min-w-[44px] min-h-[44px] flex items-center justify-center"
-            aria-expanded={menuOpen}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          >
-            {menuOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
+          {/* Global Actions (Always visible) */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="hidden sm:block">
+              <Link href="#menu" className="btn-primary text-sm py-2 px-6">
+                View Menu
+              </Link>
+            </div>
+
+            <CartButton />
+
+            {/* Mobile menu toggle */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="md:hidden p-2 rounded-lg text-charcoal hover:bg-terracotta-100 focus:outline-none focus:ring-2 focus:ring-terracotta-500"
+              aria-expanded={menuOpen}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            >
+              {menuOpen ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile menu dropdown */}
         <AnimatePresence>
           {menuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden overflow-hidden"
+              className="md:hidden overflow-hidden border-t border-terracotta-200/50"
             >
-              <ul className="py-4 space-y-2 border-t border-terracotta-200/50">
+              <ul className="py-4 space-y-2">
                 {navLinks.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
                       onClick={() => setMenuOpen(false)}
-                      className="block py-3 px-4 text-charcoal font-medium hover:bg-terracotta-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-terracotta-500 min-h-[44px] flex items-center"
+                      className="block py-3 px-4 text-charcoal font-medium hover:bg-terracotta-50 rounded-lg flex items-center"
                     >
                       {link.label}
                     </Link>
                   </li>
                 ))}
-                <li className="pt-2">
+                <li className="pt-2 sm:hidden">
                   <Link
                     href="#menu"
                     onClick={() => setMenuOpen(false)}

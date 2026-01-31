@@ -5,6 +5,8 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
     try {
+        console.log('M-Pesa STK Push initiated');
+
         // Validate environment variables first
         const requiredEnv = [
             'MPESA_CONSUMER_KEY',
@@ -16,19 +18,13 @@ export async function POST(request: NextRequest) {
 
         for (const env of requiredEnv) {
             if (!process.env[env]) {
+                console.error(`Missing variable: ${env}`);
                 throw new Error(`Missing environment variable: ${env}`);
             }
         }
 
         const { phone_number, amount, order_id } = await request.json();
-
-        // Validate inputs
-        if (!phone_number || !amount || !order_id) {
-            return NextResponse.json(
-                { error: 'Missing required order fields' },
-                { status: 400 }
-            );
-        }
+        console.log(`Order: ${order_id}, Phone: ${phone_number}, Amount: ${amount}`);
 
         // Format phone number to 254XXXXXXXXX
         let formattedPhone = phone_number.replace(/\s/g, '');
@@ -43,6 +39,7 @@ export async function POST(request: NextRequest) {
             `${process.env.MPESA_CONSUMER_KEY}:${process.env.MPESA_CONSUMER_SECRET}`
         ).toString('base64');
 
+        console.log('Fetching access token from Safaricom...');
         const tokenResponse = await fetch(
             'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
             {
@@ -55,11 +52,13 @@ export async function POST(request: NextRequest) {
 
         if (!tokenResponse.ok) {
             const errorText = await tokenResponse.text();
+            console.error(`Daraja Auth Failed: ${tokenResponse.status} - ${errorText}`);
             throw new Error(`Daraja Auth Error (${tokenResponse.status}): ${errorText}`);
         }
 
         const tokenData = await tokenResponse.json();
         const access_token = tokenData.access_token;
+        console.log('Access token obtained successfully');
 
         // Generate timestamp
         const timestamp = new Date()
@@ -71,6 +70,8 @@ export async function POST(request: NextRequest) {
         const password = Buffer.from(
             `${process.env.MPESA_BUSINESS_SHORT_CODE}${process.env.MPESA_PASSKEY}${timestamp}`
         ).toString('base64');
+
+        console.log(`Sending STK Push to ${formattedPhone} via shortcode ${process.env.MPESA_BUSINESS_SHORT_CODE}`);
 
         // Initiate STK Push
         const stkPushResponse = await fetch(
@@ -101,12 +102,15 @@ export async function POST(request: NextRequest) {
         let stkData;
         try {
             stkData = await stkPushResponse.json();
+            console.log('STK Data Response:', JSON.stringify(stkData));
         } catch (e) {
             const errorText = await stkPushResponse.text();
+            console.error(`Safaricom API Invalid JSON: ${stkPushResponse.status} - ${errorText}`);
             throw new Error(`Safaricom API Error (${stkPushResponse.status}): ${errorText || 'Invalid JSON response'}`);
         }
 
         if (stkData.ResponseCode !== '0') {
+            console.error(`STK Push Failed Code: ${stkData.ResponseCode} - ${stkData.ResponseDescription}`);
             return NextResponse.json(
                 { error: stkData.ResponseDescription || 'STK Push failed' },
                 { status: 400 }
@@ -114,6 +118,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Update order with checkout request ID
+        console.log(`Updating order ${order_id} with checkout ID ${stkData.CheckoutRequestID}`);
         await supabaseAdmin
             .from('orders')
             .update({ mpesa_checkout_id: stkData.CheckoutRequestID })

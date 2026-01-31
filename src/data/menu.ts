@@ -123,7 +123,7 @@ export const menuItems: MenuItem[] = [
     description: 'Hot tea with milk and ginger. Just like home.',
     price: 80,
     category: 'drinks',
-    image: '/menu/tilapia-whole.png',
+    image: '/menu/tea.png',
   },
   {
     id: 'tusker',
@@ -131,7 +131,7 @@ export const menuItems: MenuItem[] = [
     description: "Kenya's favourite beer. Cold and crisp.",
     price: 250,
     category: 'drinks',
-    image: '/menu/tilapia-whole.png',
+    image: '/menu/tusker.png',
   },
   {
     id: 'dawa',

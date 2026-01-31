@@ -53,7 +53,8 @@ export function CartButton() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsOpen(false)}
-                            className="fixed inset-0 bg-charcoal/80 backdrop-blur-[2px] z-[100]"
+                            className="fixed inset-0 bg-charcoal/80 backdrop-blur-[4px] z-[9998]"
+                            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
                         />
 
                         {/* Sidebar */}
@@ -62,7 +63,8 @@ export function CartButton() {
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                            className="fixed right-0 top-0 h-full w-full sm:w-[450px] bg-white shadow-[-12px_0_32px_rgba(0,0,0,0.25)] z-[110] flex flex-col"
+                            className="fixed right-0 top-0 h-full w-screen sm:w-[450px] bg-white shadow-2xl z-[9999] flex flex-col"
+                            style={{ backgroundColor: 'white', position: 'fixed', right: 0, top: 0, height: '100%' }}
                         >
                             {/* Header */}
                             <div className="p-6 border-b border-gray-200">

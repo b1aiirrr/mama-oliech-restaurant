@@ -50,7 +50,7 @@ export function Header() {
           </ul>
 
           {/* Global Actions (Always visible) */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1 sm:gap-4 pr-1 sm:pr-0">
             <div className="hidden sm:block">
               <Link href="#menu" className="btn-primary text-sm py-2 px-6">
                 View Menu

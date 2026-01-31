@@ -16,8 +16,8 @@ export function OurStory() {
             transition={{ duration: 0.5 }}
           >
             <Image
-              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80"
-              alt="Warm restaurant interior - Mama Oliech dining experience"
+              src="/dining.jpg"
+              alt="Guests enjoying a meal at Mama Oliech Restaurant"
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -16,12 +17,21 @@ export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-cream/95 backdrop-blur-sm border-b border-terracotta-200/50">
       <nav className="container-wide px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+        <div className="flex items-center justify-between h-20 sm:h-24">
           <Link
             href="#hero"
-            className="font-display text-xl sm:text-2xl font-semibold text-charcoal hover:text-terracotta-600 transition-colors"
+            className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity"
           >
-            Mama Oliech
+            <span className="font-display text-lg sm:text-xl font-semibold text-charcoal">
+              Mama Oliech Restaurant
+            </span>
+            <Image
+              src="/logo.png"
+              alt="Mama Oliech Restaurant Logo"
+              width={80}
+              height={80}
+              className="w-12 h-12 sm:w-16 sm:h-16"
+            />
           </Link>
 
           {/* Desktop nav */}

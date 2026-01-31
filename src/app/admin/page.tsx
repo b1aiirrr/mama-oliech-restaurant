@@ -20,7 +20,7 @@ export default function AdminPage() {
         if (isAuthenticated) {
             fetchOrders();
         }
-    }, [isAuthenticated, filter]);
+    }, [isAuthenticated, filter]);`n    // eslint-disable-next-line react-hooks/exhaustive-deps
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();

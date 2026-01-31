@@ -156,7 +156,7 @@ export default function CheckoutPage() {
                                     placeholder="0712345678"
                                 />
                                 <p className="text-sm text-charcoal/60 mt-1">
-                                    We'll send M-Pesa payment request to this number
+                                    We&apos;ll send M-Pesa payment request to this number
                                 </p>
                             </div>
 
@@ -257,7 +257,7 @@ export default function CheckoutPage() {
                                     <strong>Payment Method:</strong> M-Pesa
                                 </p>
                                 <p className="text-sm text-charcoal/80 mt-2">
-                                    You'll receive an M-Pesa prompt on your phone to complete the payment.
+                                    You&apos;ll receive an M-Pesa prompt on your phone to complete the payment.
                                 </p>
                             </div>
                         </div>

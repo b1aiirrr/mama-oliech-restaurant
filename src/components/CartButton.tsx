@@ -64,10 +64,10 @@ export function CartButton() {
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
                             className="fixed right-0 top-0 h-full w-screen sm:w-[450px] bg-white shadow-2xl z-[9999] flex flex-col"
-                            style={{ backgroundColor: 'white', position: 'fixed', right: 0, top: 0, height: '100%' }}
+                            style={{ backgroundColor: '#ffffff', position: 'fixed', right: 0, top: 0, height: '100%', opacity: 1 }}
                         >
                             {/* Header */}
-                            <div className="p-6 border-b border-gray-200">
+                            <div className="p-6 border-b border-gray-200 bg-white" style={{ backgroundColor: '#ffffff' }}>
                                 <div className="flex items-center justify-between">
                                     <h2 className="font-display text-2xl font-semibold text-charcoal">
                                         Your Cart ({itemCount})
@@ -85,9 +85,9 @@ export function CartButton() {
                             </div>
 
                             {/* Cart Items */}
-                            <div className="flex-1 overflow-y-auto p-6">
+                            <div className="flex-1 overflow-y-auto p-6 bg-white" style={{ backgroundColor: '#ffffff' }}>
                                 {items.length === 0 ? (
-                                    <div className="text-center py-12">
+                                    <div className="text-center py-12 bg-white" style={{ backgroundColor: '#ffffff' }}>
                                         <p className="text-charcoal/60 mb-4">Your cart is empty</p>
                                         <button
                                             onClick={() => setIsOpen(false)}
@@ -101,7 +101,7 @@ export function CartButton() {
                                         {items.map((item) => (
                                             <div
                                                 key={item.id}
-                                                className="flex gap-4 p-4 bg-cream rounded-xl"
+                                                className="flex gap-4 p-4 bg-cream rounded-xl border border-gray-100 shadow-sm"
                                             >
                                                 <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
                                                     <Image
@@ -146,7 +146,7 @@ export function CartButton() {
 
                             {/* Footer */}
                             {items.length > 0 && (
-                                <div className="border-t border-gray-200 p-6 space-y-4">
+                                <div className="border-t border-gray-200 p-6 space-y-4 bg-white" style={{ backgroundColor: '#ffffff' }}>
                                     <div className="flex justify-between text-lg font-semibold">
                                         <span>Total:</span>
                                         <span className="text-terracotta-600">{formatPrice(totalAmount)}</span>

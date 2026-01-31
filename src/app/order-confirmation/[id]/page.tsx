@@ -89,7 +89,7 @@ export default function OrderConfirmationPage() {
                             </svg>
                         </div>
                     </div>
-                    <h1 className="font-display text-5xl sm:text-7xl font-bold text-charcoal tracking-tight">
+                    <h1 className="font-display text-4xl sm:text-5xl font-bold text-charcoal tracking-tight">
                         Thank You!
                     </h1>
                     <p className="text-xl sm:text-2xl text-charcoal/60 max-w-2xl mx-auto leading-relaxed">
@@ -108,7 +108,7 @@ export default function OrderConfirmationPage() {
                             <div className="grid sm:grid-cols-2 gap-10">
                                 <div className="space-y-2">
                                     <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em]">Reference Number</p>
-                                    <p className="text-3xl font-display font-medium">{order.order_number}</p>
+                                    <p className="text-xl font-display font-medium">{order.order_number}</p>
                                 </div>
                                 <div className="space-y-2">
                                     <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em]">Current Status</p>
@@ -119,8 +119,8 @@ export default function OrderConfirmationPage() {
                                 <div className="space-y-2">
                                     <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em]">Payment Status</p>
                                     <span className={`inline-flex px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest border backdrop-blur-sm ${order.payment_status === 'paid'
-                                            ? 'bg-green-500/20 text-green-400 border-green-500/20'
-                                            : 'bg-yellow-500/20 text-yellow-500 border-yellow-500/20'
+                                        ? 'bg-green-500/20 text-green-400 border-green-500/20'
+                                        : 'bg-yellow-500/20 text-yellow-500 border-yellow-500/20'
                                         }`}>
                                         {order.payment_status}
                                     </span>
@@ -146,13 +146,13 @@ export default function OrderConfirmationPage() {
                         <div className="flex gap-4">
                             <Link
                                 href="/"
-                                className="btn-primary flex-1 py-6 text-xl rounded-2xl text-center shadow-lg shadow-terracotta-600/20"
+                                className="btn-primary flex-1 py-4 text-base rounded-xl text-center shadow-lg shadow-terracotta-600/20"
                             >
                                 Back to Home
                             </Link>
                             <Link
                                 href="/#menu"
-                                className="btn-secondary flex-1 py-6 text-xl rounded-2xl text-center bg-gray-50 border-gray-100"
+                                className="btn-secondary flex-1 py-4 text-base rounded-xl text-center bg-gray-50 border-gray-100"
                             >
                                 Order Again
                             </Link>
@@ -195,8 +195,8 @@ export default function OrderConfirmationPage() {
                                 <span className="text-green-600">Free Delivery</span>
                             </div>
                             <div className="flex justify-between items-end pt-6">
-                                <span className="text-xl font-bold text-charcoal/40 uppercase tracking-[0.2em]">Paid Amount</span>
-                                <span className="text-4xl sm:text-5xl font-display font-bold text-terracotta-600">{formatPrice(order.total_amount)}</span>
+                                <span className="text-base font-bold text-charcoal/40 uppercase tracking-[0.2em]">Paid Amount</span>
+                                <span className="text-3xl sm:text-4xl font-display font-bold text-terracotta-600">{formatPrice(order.total_amount)}</span>
                             </div>
                         </div>
 

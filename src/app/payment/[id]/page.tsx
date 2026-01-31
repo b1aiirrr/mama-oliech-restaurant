@@ -134,15 +134,15 @@ export default function PaymentPage() {
                         {/* Order Details Side */}
                         <div className="bg-charcoal p-8 sm:p-12 text-white flex flex-col justify-between">
                             <div>
-                                <h1 className="font-display text-4xl sm:text-5xl font-bold mb-8">Pay & Enjoy</h1>
+                                <h1 className="font-display text-3xl sm:text-4xl font-bold mb-8">Pay & Enjoy</h1>
                                 <div className="space-y-6">
                                     <div>
-                                        <p className="text-white/40 text-sm uppercase tracking-widest font-bold mb-1">Order Reference</p>
-                                        <p className="text-2xl font-display font-medium">{order.order_number}</p>
+                                        <p className="text-white/40 text-xs uppercase tracking-widest font-bold mb-1">Order Reference</p>
+                                        <p className="text-xl font-display font-medium">{order.order_number}</p>
                                     </div>
                                     <div className="pt-6 border-t border-white/10">
-                                        <p className="text-white/40 text-sm uppercase tracking-widest font-bold mb-1">Amount Due</p>
-                                        <p className="text-5xl font-display font-bold text-terracotta-500">{formatPrice(order.total_amount)}</p>
+                                        <p className="text-white/40 text-xs uppercase tracking-widest font-bold mb-1">Amount Due</p>
+                                        <p className="text-4xl font-display font-bold text-terracotta-500">{formatPrice(order.total_amount)}</p>
                                     </div>
                                 </div>
                             </div>
@@ -172,7 +172,7 @@ export default function PaymentPage() {
                             {!paying ? (
                                 <div className="space-y-8">
                                     <div className="space-y-4">
-                                        <h3 className="text-2xl font-bold text-charcoal">Instructions</h3>
+                                        <h3 className="text-xl font-bold text-charcoal">Instructions</h3>
                                         <div className="space-y-4 text-charcoal/70">
                                             <p className="flex items-start gap-3">
                                                 <span className="font-bold text-terracotta-600">01.</span>
@@ -198,7 +198,7 @@ export default function PaymentPage() {
                                     <div className="space-y-4">
                                         <button
                                             onClick={initiateMpesaPayment}
-                                            className="btn-primary w-full py-6 text-xl rounded-2xl shadow-xl shadow-terracotta-600/20 active:scale-[0.98] transition-all"
+                                            className="btn-primary w-full py-4 text-lg rounded-xl shadow-xl shadow-terracotta-600/20 active:scale-[0.98] transition-all"
                                         >
                                             Send M-Pesa Prompt
                                         </button>
@@ -221,10 +221,10 @@ export default function PaymentPage() {
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl sm:text-3xl font-bold text-charcoal mb-4">Awaiting PIN...</h3>
-                                        <p className="text-charcoal/60 leading-relaxed text-lg">
+                                        <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-4">Awaiting PIN...</h3>
+                                        <p className="text-charcoal/60 leading-relaxed text-base">
                                             An M-Pesa prompt has been sent to <br />
-                                            <span className="text-charcoal font-bold text-xl">{order.customer_phone}</span>
+                                            <span className="text-charcoal font-bold text-lg">{order.customer_phone}</span>
                                         </p>
                                     </div>
                                     <div className="flex justify-center gap-2">

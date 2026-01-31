@@ -57,11 +57,11 @@ export function CartButton() {
                         <div className="flex-none p-6 sm:p-10 border-b border-gray-100 bg-white">
                             <div className="max-w-7xl mx-auto flex items-center justify-between">
                                 <div className="flex flex-col">
-                                    <h2 className="font-display text-4xl sm:text-6xl font-bold text-charcoal">
+                                    <h2 className="font-display text-3xl sm:text-4xl font-bold text-charcoal">
                                         Your Bag
                                     </h2>
-                                    <p className="text-terracotta-600 font-bold text-xl uppercase tracking-widest mt-2">
-                                        {itemCount} Delicacies Selected
+                                    <p className="text-terracotta-600 font-bold text-base uppercase tracking-widest mt-1">
+                                        {itemCount} Items Selected
                                     </p>
                                 </div>
                                 <button
@@ -86,10 +86,10 @@ export function CartButton() {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                             </svg>
                                         </div>
-                                        <p className="text-4xl font-display text-charcoal/30 mb-12 italic">Hungry? Your cart is empty...</p>
+                                        <p className="text-2xl font-display text-charcoal/30 mb-8 italic">Hungry? Your cart is empty...</p>
                                         <button
                                             onClick={() => setIsOpen(false)}
-                                            className="btn-primary px-20 py-8 text-3xl rounded-[3rem] shadow-2xl shadow-terracotta-600/30"
+                                            className="btn-primary px-12 py-4 text-xl rounded-2xl shadow-xl shadow-terracotta-600/30"
                                         >
                                             View Menu
                                         </button>
@@ -112,25 +112,25 @@ export function CartButton() {
                                                 <div className="flex-1 flex flex-col justify-between py-4 text-center sm:text-left w-full">
                                                     <div>
                                                         <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-4">
-                                                            <h3 className="font-display text-4xl sm:text-5xl font-bold text-charcoal">{item.name}</h3>
-                                                            <p className="text-terracotta-700 font-bold text-3xl sm:text-4xl">
+                                                            <h3 className="font-display text-2xl sm:text-3xl font-bold text-charcoal">{item.name}</h3>
+                                                            <p className="text-terracotta-700 font-bold text-xl sm:text-2xl">
                                                                 {formatPrice(item.price)}
                                                             </p>
                                                         </div>
                                                     </div>
                                                     <div className="flex flex-col sm:flex-row items-center justify-between mt-12 gap-8">
-                                                        <div className="flex items-center gap-10 bg-gray-50 p-3 rounded-[2.5rem] border border-gray-100 shadow-inner">
+                                                        <div className="flex items-center gap-6 bg-gray-50 p-2 rounded-2xl border border-gray-100 shadow-inner">
                                                             <button
                                                                 onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                                                className="w-16 h-16 flex items-center justify-center bg-white rounded-full hover:bg-terracotta-600 hover:text-white text-4xl font-bold transition-all shadow-md active:scale-90"
+                                                                className="w-10 h-10 flex items-center justify-center bg-white rounded-full hover:bg-terracotta-600 hover:text-white text-xl font-bold transition-all shadow-md active:scale-90"
                                                                 disabled={item.quantity <= 1}
                                                             >
                                                                 -
                                                             </button>
-                                                            <span className="font-bold text-4xl min-w-[3rem] text-center">{item.quantity}</span>
+                                                            <span className="font-bold text-xl min-w-[2rem] text-center">{item.quantity}</span>
                                                             <button
                                                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                                className="w-16 h-16 flex items-center justify-center bg-white rounded-full hover:bg-terracotta-600 hover:text-white text-4xl font-bold transition-all shadow-md active:scale-90"
+                                                                className="w-10 h-10 flex items-center justify-center bg-white rounded-full hover:bg-terracotta-600 hover:text-white text-xl font-bold transition-all shadow-md active:scale-90"
                                                             >
                                                                 +
                                                             </button>
@@ -156,14 +156,14 @@ export function CartButton() {
                                 {items.length > 0 && (
                                     <div className="flex flex-col gap-10">
                                         <div className="flex justify-between items-end">
-                                            <span className="text-3xl font-display text-charcoal/40 font-bold uppercase tracking-[0.3em]">Total Amount</span>
-                                            <span className="text-6xl sm:text-8xl font-display font-bold text-terracotta-600">{formatPrice(totalAmount)}</span>
+                                            <span className="text-xl font-display text-charcoal/40 font-bold uppercase tracking-[0.3em]">Total Amount</span>
+                                            <span className="text-4xl sm:text-5xl font-display font-bold text-terracotta-600">{formatPrice(totalAmount)}</span>
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                                             <Link
                                                 href="/checkout"
                                                 onClick={() => setIsOpen(false)}
-                                                className="btn-primary py-10 text-3xl text-center rounded-[3rem] shadow-[0_25px_50px_-12px_rgba(196,64,44,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                                className="btn-primary py-5 text-xl text-center rounded-2xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
                                             >
                                                 Proceed to Checkout
                                             </Link>
@@ -173,7 +173,7 @@ export function CartButton() {
                                                         clearCart();
                                                     }
                                                 }}
-                                                className="btn-secondary py-10 text-3xl rounded-[3rem]"
+                                                className="btn-secondary py-5 text-xl rounded-2xl"
                                             >
                                                 Clear Bag
                                             </button>

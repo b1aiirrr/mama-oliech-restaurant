@@ -105,8 +105,8 @@ export default function OrderConfirmationPage() {
                             <div>
                                 <p className="text-sm text-charcoal/60 mb-1">Payment Status</p>
                                 <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${order.payment_status === 'paid'
-                                        ? 'bg-green-100 text-green-800'
-                                        : 'bg-yellow-100 text-yellow-800'
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-yellow-100 text-yellow-800'
                                     }`}>
                                     {order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1)}
                                 </span>
@@ -149,7 +149,7 @@ export default function OrderConfirmationPage() {
                     {/* Contact Info */}
                     <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
                         <p className="text-sm text-charcoal/80">
-                            <strong> Thank you!</strong> We'll call you at <strong>{order.customer_phone}</strong> when your order is ready.
+                            <strong> Thank you!</strong> We&apos;ll call you at <strong>{order.customer_phone}</strong> when your order is ready.
                         </p>
                     </div>
 

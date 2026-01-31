@@ -5,12 +5,27 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
     try {
+        // Validate environment variables first
+        const requiredEnv = [
+            'MPESA_CONSUMER_KEY',
+            'MPESA_CONSUMER_SECRET',
+            'MPESA_BUSINESS_SHORT_CODE',
+            'MPESA_PASSKEY',
+            'NEXT_PUBLIC_MPESA_CALLBACK_URL'
+        ];
+
+        for (const env of requiredEnv) {
+            if (!process.env[env]) {
+                throw new Error(`Missing environment variable: ${env}`);
+            }
+        }
+
         const { phone_number, amount, order_id } = await request.json();
 
         // Validate inputs
         if (!phone_number || !amount || !order_id) {
             return NextResponse.json(
-                { error: 'Missing required fields' },
+                { error: 'Missing required order fields' },
                 { status: 400 }
             );
         }
@@ -34,10 +49,17 @@ export async function POST(request: NextRequest) {
                 headers: {
                     Authorization: `Basic ${auth}`,
                 },
+                cache: 'no-store'
             }
         );
 
-        const { access_token } = await tokenResponse.json();
+        if (!tokenResponse.ok) {
+            const errorText = await tokenResponse.text();
+            throw new Error(`Daraja Auth Error (${tokenResponse.status}): ${errorText}`);
+        }
+
+        const tokenData = await tokenResponse.json();
+        const access_token = tokenData.access_token;
 
         // Generate timestamp
         const timestamp = new Date()
@@ -72,10 +94,17 @@ export async function POST(request: NextRequest) {
                     AccountReference: order_id,
                     TransactionDesc: `Payment for order ${order_id}`,
                 }),
+                cache: 'no-store'
             }
         );
 
-        const stkData = await stkPushResponse.json();
+        let stkData;
+        try {
+            stkData = await stkPushResponse.json();
+        } catch (e) {
+            const errorText = await stkPushResponse.text();
+            throw new Error(`Safaricom API Error (${stkPushResponse.status}): ${errorText || 'Invalid JSON response'}`);
+        }
 
         if (stkData.ResponseCode !== '0') {
             return NextResponse.json(

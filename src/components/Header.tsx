@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CartButton } from './CartButton';
 
 const navLinks = [
   { href: '#menu', label: 'Menu' },
@@ -50,6 +51,9 @@ export function Header() {
               <Link href="#menu" className="btn-primary text-base py-3 px-6">
                 View Menu
               </Link>
+            </li>
+            <li>
+              <CartButton />
             </li>
           </ul>
 

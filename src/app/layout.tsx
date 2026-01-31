@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
 import { DM_Serif_Display, Source_Sans_3 } from 'next/font/google';
 import './globals.css';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
-import { CartProvider } from '@/contexts/CartContext';
+import { MainLayout } from '@/components/MainLayout';
 
 const displayFont = DM_Serif_Display({
   weight: '400',
@@ -50,11 +48,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${displayFont.variable} ${bodyFont.variable}`}>
       <body className="min-h-screen flex flex-col bg-cream text-charcoal">
-        <CartProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </CartProvider>
+        <MainLayout>
+          {children}
+        </MainLayout>
       </body>
     </html>
   );

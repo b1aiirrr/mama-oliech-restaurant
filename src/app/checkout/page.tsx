@@ -92,7 +92,13 @@ export default function CheckoutPage() {
             router.push(`/payment/${order.id}`);
         } catch (err: any) {
             console.error('Order creation error:', err);
-            setError(err.message || 'Failed to create order. Please try again.');
+            let message = err.message || 'Failed to create order. Please try again.';
+
+            if (message.includes('fetch')) {
+                message = 'Connection Error: We couldn\'t reach the database. If this is a deployed site, please ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are added to your environment variables.';
+            }
+
+            setError(message);
         } finally {
             setIsSubmitting(false);
         }

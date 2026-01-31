@@ -23,8 +23,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         const savedCart = localStorage.getItem('mama-oliech-cart');
         if (savedCart) {
-            setItems(JSON.parse(savedCart));
+            try {
+                setItems(JSON.parse(savedCart));
+            } catch (e) {
+                console.error('Failed to parse cart:', e);
+            }
         }
+
+        // Sync cart across tabs
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === 'mama-oliech-cart' && e.newValue) {
+                try {
+                    setItems(JSON.parse(e.newValue));
+                } catch (e) {
+                    console.error('Failed to parse synced cart:', e);
+                }
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
 
     // Save cart to localStorage whenever it changes

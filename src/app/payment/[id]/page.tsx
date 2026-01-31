@@ -127,73 +127,118 @@ export default function PaymentPage() {
     }
 
     return (
-        <div className="min-h-screen bg-cream py-20">
-            <div className="container max-w-2xl mx-auto px-4">
-                <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8">
-                    <h1 className="font-display text-3xl font-semibold text-charcoal mb-6 text-center">
-                        Complete Payment
-                    </h1>
-
-                    <div className="bg-terracotta-50 border border-terracotta-200 rounded-xl p-6 mb-6">
-                        <div className="text-center mb-4">
-                            <p className="text-charcoal/80 mb-2">Order Number</p>
-                            <p className="font-display text-2xl font-semibold text-charcoal">
-                                {order.order_number}
-                            </p>
-                        </div>
-
-                        <div className="flex justify-between items-center border-t border-terracotta-200 pt-4">
-                            <span className="text-charcoal/80">Total Amount:</span>
-                            <span className="font-display text-3xl font-semibold text-terracotta-600">
-                                {formatPrice(order.total_amount)}
-                            </span>
-                        </div>
-                    </div>
-
-                    {!paying ? (
-                        <>
-                            <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-6">
-                                <h3 className="font-semibold text-charcoal mb-3">📱 M-Pesa Payment Steps:</h3>
-                                <ol className="list-decimal list-inside space-y-2 text-charcoal/80">
-                                    <li>Click &quot;Pay with M-Pesa&quot; button below</li>
-                                    <li>You&apos;ll receive an M-Pesa prompt on <strong>{order.customer_phone}</strong></li>
-                                    <li>Enter your M-Pesa PIN to complete payment</li>
-                                    <li>Wait for confirmation</li>
-                                </ol>
+        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+            <div className="max-w-4xl w-full">
+                <div className="bg-white border-2 border-gray-100 rounded-[2.5rem] shadow-2xl overflow-hidden">
+                    <div className="grid md:grid-cols-2">
+                        {/* Order Details Side */}
+                        <div className="bg-charcoal p-8 sm:p-12 text-white flex flex-col justify-between">
+                            <div>
+                                <h1 className="font-display text-4xl sm:text-5xl font-bold mb-8">Pay & Enjoy</h1>
+                                <div className="space-y-6">
+                                    <div>
+                                        <p className="text-white/40 text-sm uppercase tracking-widest font-bold mb-1">Order Reference</p>
+                                        <p className="text-2xl font-display font-medium">{order.order_number}</p>
+                                    </div>
+                                    <div className="pt-6 border-t border-white/10">
+                                        <p className="text-white/40 text-sm uppercase tracking-widest font-bold mb-1">Amount Due</p>
+                                        <p className="text-5xl font-display font-bold text-terracotta-500">{formatPrice(order.total_amount)}</p>
+                                    </div>
+                                </div>
                             </div>
 
-                            {error && (
-                                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-                                    {error}
+                            <div className="mt-12 space-y-4">
+                                <div className="flex items-center gap-4 text-white/60">
+                                    <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                    <p>Freshly prepared items</p>
+                                </div>
+                                <div className="flex items-center gap-4 text-white/60">
+                                    <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                    <p>Instant M-Pesa push</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Action Side */}
+                        <div className="p-8 sm:p-12 flex flex-col justify-center bg-gray-50/50">
+                            {!paying ? (
+                                <div className="space-y-8">
+                                    <div className="space-y-4">
+                                        <h3 className="text-2xl font-bold text-charcoal">Instructions</h3>
+                                        <div className="space-y-4 text-charcoal/70">
+                                            <p className="flex items-start gap-3">
+                                                <span className="font-bold text-terracotta-600">01.</span>
+                                                Ensure your phone <strong>{order.customer_phone}</strong> is unlocked and has enough balance.
+                                            </p>
+                                            <p className="flex items-start gap-3">
+                                                <span className="font-bold text-terracotta-600">02.</span>
+                                                Click the button below to receive an M-Pesa STK push.
+                                            </p>
+                                            <p className="flex items-start gap-3">
+                                                <span className="font-bold text-terracotta-600">03.</span>
+                                                Enter your M-Pesa PIN when prompted on your phone.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {error && (
+                                        <div className="bg-red-50 border-l-4 border-red-500 p-4 text-red-700 font-medium text-sm rounded-r-xl">
+                                            {error}
+                                        </div>
+                                    )}
+
+                                    <div className="space-y-4">
+                                        <button
+                                            onClick={initiateMpesaPayment}
+                                            className="btn-primary w-full py-6 text-xl rounded-2xl shadow-xl shadow-terracotta-600/20 active:scale-[0.98] transition-all"
+                                        >
+                                            Send M-Pesa Prompt
+                                        </button>
+                                        <button
+                                            onClick={() => router.push('/')}
+                                            className="w-full py-4 text-charcoal/40 hover:text-charcoal font-bold uppercase tracking-widest text-xs transition-colors"
+                                        >
+                                            Cancel Order
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="text-center space-y-8 animate-in fade-in zoom-in duration-500">
+                                    <div className="relative inline-block">
+                                        <div className="animate-ping absolute inset-0 rounded-full bg-terracotta-500/20 h-full w-full"></div>
+                                        <div className="relative p-6 bg-white rounded-full shadow-xl border-4 border-terracotta-100">
+                                            <svg className="w-12 h-12 text-terracotta-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-2xl sm:text-3xl font-bold text-charcoal mb-4">Awaiting PIN...</h3>
+                                        <p className="text-charcoal/60 leading-relaxed text-lg">
+                                            An M-Pesa prompt has been sent to <br />
+                                            <span className="text-charcoal font-bold text-xl">{order.customer_phone}</span>
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce [animation-delay:-0.3s]"></div>
+                                        <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce [animation-delay:-0.15s]"></div>
+                                        <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce"></div>
+                                    </div>
+                                    <p className="text-xs text-charcoal/40 font-medium uppercase tracking-widest">
+                                        System will automatically confirm once paid
+                                    </p>
                                 </div>
                             )}
-
-                            <button
-                                onClick={initiateMpesaPayment}
-                                className="btn-primary w-full text-lg py-4 mb-4"
-                            >
-                                Pay with M-Pesa
-                            </button>
-
-                            <button
-                                onClick={() => router.push('/')}
-                                className="btn-secondary w-full py-3"
-                            >
-                                Cancel
-                            </button>
-                        </>
-                    ) : (
-                        <div className="text-center py-8">
-                            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-terracotta-600 mx-auto mb-6"></div>
-                            <h3 className="font-semibold text-charcoal text-xl mb-2">Processing Payment...</h3>
-                            <p className="text-charcoal/80 mb-4">
-                                Please check your phone for the M-Pesa prompt
-                            </p>
-                            <p className="text-sm text-charcoal/60">
-                                Enter your M-Pesa PIN to complete the payment
-                            </p>
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
         </div>

@@ -24,24 +24,36 @@ function MenuCard({ item }: { item: MenuItem }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-2xl shadow-md overflow-hidden border border-terracotta-100 hover:shadow-lg hover:border-terracotta-200 transition-all"
+      whileHover={{
+        y: -8,
+        transition: { duration: 0.3, ease: "easeOut" }
+      }}
+      className="bg-white rounded-2xl shadow-md overflow-hidden border border-terracotta-100 hover:shadow-2xl hover:border-terracotta-300 transition-all group cursor-pointer"
     >
-      <div className="relative aspect-square w-full">
-        <Image
-          src={item.image}
-          alt={item.name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
+      <div className="relative aspect-square w-full overflow-hidden">
+        <motion.div
+          className="w-full h-full"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
+          <Image
+            src={item.image}
+            alt={item.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        </motion.div>
+        {/* Overlay gradient on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
       <div className="p-5 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
           <div>
-            <h3 className="font-display text-lg font-semibold text-charcoal">{item.name}</h3>
+            <h3 className="font-display text-lg font-semibold text-charcoal group-hover:text-terracotta-600 transition-colors duration-300">{item.name}</h3>
             <p className="mt-1 text-charcoal/80 text-sm sm:text-base">{item.description}</p>
           </div>
-          <p className="font-semibold text-terracotta-600 text-lg whitespace-nowrap sm:ml-4">
+          <p className="font-semibold text-terracotta-600 text-lg whitespace-nowrap sm:ml-4 group-hover:scale-110 transition-transform duration-300">
             {formatPrice(item.price)}
           </p>
         </div>

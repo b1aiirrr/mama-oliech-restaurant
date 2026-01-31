@@ -6,6 +6,7 @@ export interface MenuItem {
   description: string;
   price: number;
   category: MenuCategory;
+  image: string;
 }
 
 export const menuItems: MenuItem[] = [
@@ -16,6 +17,7 @@ export const menuItems: MenuItem[] = [
     description: 'Whole tilapia from Lake Victoria, grilled or fried to perfection. Our signature dish.',
     price: 1200,
     category: 'fish',
+    image: '/menu/tilapia-whole.png',
   },
   {
     id: 'tilapia-half',
@@ -23,6 +25,7 @@ export const menuItems: MenuItem[] = [
     description: 'Half portion of our legendary tilapia. Perfect for one.',
     price: 650,
     category: 'fish',
+    image: '/menu/tilapia-half.png',
   },
   {
     id: 'tilapia-fillet',
@@ -30,6 +33,7 @@ export const menuItems: MenuItem[] = [
     description: 'Boneless tilapia fillet, grilled or fried. Light and flaky.',
     price: 750,
     category: 'fish',
+    image: '/menu/tilapia-fillet.png',
   },
   {
     id: 'fish-stew',
@@ -37,6 +41,7 @@ export const menuItems: MenuItem[] = [
     description: 'Tilapia in a rich tomato and onion stew. Served with ugali.',
     price: 800,
     category: 'fish',
+    image: '/menu/fish-stew.png',
   },
   // Accompaniments
   {
@@ -45,6 +50,7 @@ export const menuItems: MenuItem[] = [
     description: 'Traditional Kenyan maize meal. The perfect partner for tilapia and sukuma.',
     price: 80,
     category: 'accompaniments',
+    image: '/menu/ugali.png',
   },
   {
     id: 'kachumbari',
@@ -52,6 +58,7 @@ export const menuItems: MenuItem[] = [
     description: 'Fresh tomato, onion, and cilantro salad. Refreshing with every bite.',
     price: 150,
     category: 'accompaniments',
+    image: '/menu/kachumbari.png',
   },
   {
     id: 'sukuma-wiki',
@@ -59,6 +66,7 @@ export const menuItems: MenuItem[] = [
     description: 'Braised collard greens with tomatoes and onions. A Kenyan staple.',
     price: 120,
     category: 'accompaniments',
+    image: '/menu/sukuma-wiki.png',
   },
   {
     id: 'chapati',
@@ -66,6 +74,7 @@ export const menuItems: MenuItem[] = [
     description: 'Soft, flaky flatbread. One or two with your fish.',
     price: 80,
     category: 'accompaniments',
+    image: '/menu/chapati.png',
   },
   {
     id: 'rice',
@@ -73,6 +82,7 @@ export const menuItems: MenuItem[] = [
     description: 'Plain white rice. Ideal with fish stew.',
     price: 100,
     category: 'accompaniments',
+    image: '/menu/rice.png',
   },
   {
     id: 'chips',
@@ -80,6 +90,7 @@ export const menuItems: MenuItem[] = [
     description: 'Crispy golden fries. A crowd favourite.',
     price: 200,
     category: 'accompaniments',
+    image: '/menu/chips.png',
   },
   // Drinks
   {
@@ -88,6 +99,7 @@ export const menuItems: MenuItem[] = [
     description: 'Still or sparkling. Stay refreshed.',
     price: 80,
     category: 'drinks',
+    image: '/menu/water.png',
   },
   {
     id: 'soda',
@@ -95,6 +107,7 @@ export const menuItems: MenuItem[] = [
     description: 'Coca-Cola, Fanta, Sprite. Chilled.',
     price: 100,
     category: 'drinks',
+    image: '/menu/soda.png',
   },
   {
     id: 'fresh-juice',
@@ -102,6 +115,7 @@ export const menuItems: MenuItem[] = [
     description: 'Mango, passion, or mixed. Freshly squeezed.',
     price: 250,
     category: 'drinks',
+    image: '/menu/fresh-juice.png',
   },
   {
     id: 'tea',
@@ -109,6 +123,7 @@ export const menuItems: MenuItem[] = [
     description: 'Hot tea with milk and ginger. Just like home.',
     price: 80,
     category: 'drinks',
+    image: '/menu/tilapia-whole.png',
   },
   {
     id: 'tusker',
@@ -116,6 +131,7 @@ export const menuItems: MenuItem[] = [
     description: "Kenya's favourite beer. Cold and crisp.",
     price: 250,
     category: 'drinks',
+    image: '/menu/tilapia-whole.png',
   },
   {
     id: 'dawa',
@@ -123,5 +139,6 @@ export const menuItems: MenuItem[] = [
     description: 'Honey, lime, vodka. The legendary Kenyan cocktail.',
     price: 350,
     category: 'drinks',
+    image: '/menu/tilapia-whole.png',
   },
 ];

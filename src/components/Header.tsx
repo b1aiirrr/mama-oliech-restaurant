@@ -20,18 +20,18 @@ export function Header() {
         <div className="flex items-center justify-between h-20 sm:h-24">
           <Link
             href="#hero"
-            className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
-            <span className="font-display text-lg sm:text-xl font-semibold text-charcoal">
-              Mama Oliech Restaurant
-            </span>
             <Image
               src="/logo.png"
               alt="Mama Oliech Restaurant Logo"
               width={80}
               height={80}
-              className="w-12 h-12 sm:w-16 sm:h-16"
+              className="w-14 h-14 sm:w-16 sm:h-16"
             />
+            <span className="font-display text-lg sm:text-xl font-semibold text-charcoal">
+              Mama Oliech Restaurant
+            </span>
           </Link>
 
           {/* Desktop nav */}

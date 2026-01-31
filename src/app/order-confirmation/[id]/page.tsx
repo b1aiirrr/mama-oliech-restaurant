@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { Order, OrderItem } from '@/types/orders';
 
@@ -16,34 +15,34 @@ export default function OrderConfirmationPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const fetchOrder = async () => {
+            try {
+                const { data: orderData, error: orderError } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .eq('id', orderId)
+                    .single();
+
+                if (orderError) throw orderError;
+
+                const { data: itemsData, error: itemsError } = await supabase
+                    .from('order_items')
+                    .select('*')
+                    .eq('order_id', orderId);
+
+                if (itemsError) throw itemsError;
+
+                setOrder(orderData);
+                setOrderItems(itemsData);
+            } catch (err) {
+                console.error('Failed to fetch order:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchOrder();
     }, [orderId]);
-
-    const fetchOrder = async () => {
-        try {
-            const { data: orderData, error: orderError } = await supabase
-                .from('orders')
-                .select('*')
-                .eq('id', orderId)
-                .single();
-
-            if (orderError) throw orderError;
-
-            const { data: itemsData, error: itemsError } = await supabase
-                .from('order_items')
-                .select('*')
-                .eq('order_id', orderId);
-
-            if (itemsError) throw itemsError;
-
-            setOrder(orderData);
-            setOrderItems(itemsData);
-        } catch (err) {
-            console.error('Failed to fetch order:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const formatPrice = (price: number) => `KSh ${price.toLocaleString()}`;
 
@@ -149,7 +148,7 @@ export default function OrderConfirmationPage() {
                     {/* Contact Info */}
                     <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
                         <p className="text-sm text-charcoal/80">
-                            <strong> Thank you!</strong> We&apos;ll call you at <strong>{order.customer_phone}</strong> when your order is ready.
+                            <strong>Thank you!</strong> We&apos;ll call you at <strong>{order.customer_phone}</strong> when your order is ready.
                         </p>
                     </div>
 

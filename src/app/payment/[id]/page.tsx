@@ -16,25 +16,26 @@ export default function PaymentPage() {
     const [error, setError] = useState('');
 
     useEffect(() => {
+        const fetchOrder = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .eq('id', orderId)
+                    .single();
+
+                if (error) throw error;
+                setOrder(data);
+            } catch (err: any) {
+                console.error('Order query error:', err);
+                setError('Order not found');
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchOrder();
     }, [orderId]);
-
-    const fetchOrder = async () => {
-        try {
-            const { data, error } = await supabase
-                .from('orders')
-                .select('*')
-                .eq('id', orderId)
-                .single();
-
-            if (error) throw error;
-            setOrder(data);
-        } catch (err: any) {
-            setError('Order not found');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const initiateMpesaPayment = async () => {
         setPaying(true);
@@ -147,8 +148,8 @@ export default function PaymentPage() {
                             <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-6">
                                 <h3 className="font-semibold text-charcoal mb-3">📱 M-Pesa Payment Steps:</h3>
                                 <ol className="list-decimal list-inside space-y-2 text-charcoal/80">
-                                    <li>Click "Pay with M-Pesa" button below</li>
-                                    <li>You'll receive an M-Pesa prompt on <strong>{order.customer_phone}</strong></li>
+                                    <li>Click &quot;Pay with M-Pesa&quot; button below</li>
+                                    <li>You&apos;ll receive an M-Pesa prompt on <strong>{order.customer_phone}</strong></li>
                                     <li>Enter your M-Pesa PIN to complete payment</li>
                                     <li>Wait for confirmation</li>
                                 </ol>

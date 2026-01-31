@@ -20,11 +20,12 @@ export default function AdminPage() {
         if (isAuthenticated) {
             fetchOrders();
         }
-    }, [isAuthenticated, filter]);`n    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isAuthenticated, filter]);
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        if (pin === process.env.NEXT_PUBLIC_ADMIN_PIN || pin === '2026') {
+        if (pin === (process.env.NEXT_PUBLIC_ADMIN_PIN || '2026')) {
             setIsAuthenticated(true);
             setError('');
         } else {
@@ -152,8 +153,8 @@ export default function AdminPage() {
                             key={status}
                             onClick={() => setFilter(status as any)}
                             className={`px-4 py-2 rounded-lg font-semibold whitespace-nowrap transition-colors ${filter === status
-                                    ? 'bg-terracotta-600 text-white'
-                                    : 'bg-white text-charcoal hover:bg-terracotta-50'
+                                ? 'bg-terracotta-600 text-white'
+                                : 'bg-white text-charcoal hover:bg-terracotta-50'
                                 }`}
                         >
                             {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -185,8 +186,8 @@ export default function AdminPage() {
                                             fetchOrderDetails(order.id);
                                         }}
                                         className={`p-4 rounded-xl cursor-pointer transition-all ${selectedOrder?.id === order.id
-                                                ? 'bg-terracotta-100 border-2 border-terracotta-600'
-                                                : 'bg-cream hover:bg-terracotta-50 border-2 border-transparent'
+                                            ? 'bg-terracotta-100 border-2 border-terracotta-600'
+                                            : 'bg-cream hover:bg-terracotta-50 border-2 border-transparent'
                                             }`}
                                     >
                                         <div className="flex justify-between items-start mb-2">
@@ -195,8 +196,8 @@ export default function AdminPage() {
                                                 <p className="text-sm text-charcoal/60">{order.customer_name}</p>
                                             </div>
                                             <span className={`px-2 py-1 rounded text-xs font-semibold ${order.payment_status === 'paid'
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : 'bg-yellow-100 text-yellow-800'
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-yellow-100 text-yellow-800'
                                                 }`}>
                                                 {order.payment_status}
                                             </span>
@@ -272,8 +273,8 @@ export default function AdminPage() {
                                                 key={status}
                                                 onClick={() => updateOrderStatus(selectedOrder.id, status)}
                                                 className={`py-2 px-4 rounded-lg font-semibold transition-colors ${selectedOrder.order_status === status
-                                                        ? 'bg-terracotta-600 text-white'
-                                                        : 'bg-gray-100 text-charcoal hover:bg-gray-200'
+                                                    ? 'bg-terracotta-600 text-white'
+                                                    : 'bg-gray-100 text-charcoal hover:bg-gray-200'
                                                     }`}
                                             >
                                                 {status.charAt(0).toUpperCase() + status.slice(1)}

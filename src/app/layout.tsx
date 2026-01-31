@@ -35,6 +35,10 @@ export const metadata: Metadata = {
     description: 'The taste of Lake Victoria in the heart of Nairobi.',
     type: 'website',
   },
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({

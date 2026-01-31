@@ -55,7 +55,7 @@ export function Hero() {
           </Link>
           <Link
             href="#visit-us"
-            className="btn-secondary border-white text-white hover:bg-white/10 w-full sm:w-auto"
+            className="btn-secondary border-white text-charcoal bg-white hover:bg-white/90 w-full sm:w-auto"
           >
             Visit Us
           </Link>

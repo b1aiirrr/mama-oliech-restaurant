@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
     try {
@@ -65,7 +68,7 @@ export async function POST(request: NextRequest) {
                     PartyA: formattedPhone,
                     PartyB: process.env.MPESA_BUSINESS_SHORT_CODE,
                     PhoneNumber: formattedPhone,
-                    CallBackURL: `${process.env.NEXT_PUBLIC_MPESA_CALLBACK_URL}`,
+                    CallBackURL: process.env.NEXT_PUBLIC_MPESA_CALLBACK_URL,
                     AccountReference: order_id,
                     TransactionDesc: `Payment for order ${order_id}`,
                 }),
@@ -82,7 +85,6 @@ export async function POST(request: NextRequest) {
         }
 
         // Update order with checkout request ID
-        const { supabaseAdmin } = await import('@/lib/supabase');
         await supabaseAdmin
             .from('orders')
             .update({ mpesa_checkout_id: stkData.CheckoutRequestID })

@@ -99,7 +99,7 @@ export const menuItems: MenuItem[] = [
     description: 'Still or sparkling. Stay refreshed.',
     price: 80,
     category: 'drinks',
-    image: '/menu/water.png',
+    image: '/menu/keringet.png',
   },
   {
     id: 'soda',
@@ -139,6 +139,6 @@ export const menuItems: MenuItem[] = [
     description: 'Honey, lime, vodka. The legendary Kenyan cocktail.',
     price: 350,
     category: 'drinks',
-    image: '/menu/tilapia-whole.png',
+    image: '/menu/dawa.webp',
   },
 ];

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { menuItems, type MenuCategory, type MenuItem } from '@/data/menu';
 
@@ -25,6 +26,15 @@ function MenuCard({ item }: { item: MenuItem }) {
       transition={{ duration: 0.3 }}
       className="bg-white rounded-2xl shadow-md overflow-hidden border border-terracotta-100 hover:shadow-lg hover:border-terracotta-200 transition-all"
     >
+      <div className="relative aspect-square w-full">
+        <Image
+          src={item.image}
+          alt={item.name}
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
+      </div>
       <div className="p-5 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
           <div>
@@ -79,11 +89,10 @@ export function Menu() {
               key={cat.value}
               type="button"
               onClick={() => setActiveCategory(cat.value)}
-              className={`min-h-[48px] px-6 py-3 rounded-full font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:ring-offset-2 ${
-                activeCategory === cat.value
-                  ? 'bg-terracotta-600 text-white'
-                  : 'bg-white text-charcoal border border-terracotta-200 hover:border-terracotta-400 hover:bg-terracotta-50'
-              }`}
+              className={`min-h-[48px] px-6 py-3 rounded-full font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:ring-offset-2 ${activeCategory === cat.value
+                ? 'bg-terracotta-600 text-white'
+                : 'bg-white text-charcoal border border-terracotta-200 hover:border-terracotta-400 hover:bg-terracotta-50'
+                }`}
               aria-pressed={activeCategory === cat.value}
               aria-label={`Filter menu by ${cat.label}`}
             >

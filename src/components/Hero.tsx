@@ -50,12 +50,12 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
         >
-          <Link href="#menu" className="btn-primary bg-terracotta-600 hover:bg-terracotta-700 text-white w-full sm:w-auto">
+          <Link href="#menu" className="btn-primary w-full sm:w-auto">
             View Menu
           </Link>
           <Link
             href="#visit-us"
-            className="btn-secondary border-white text-charcoal bg-white hover:bg-white/90 w-full sm:w-auto"
+            className="btn-secondary bg-white text-charcoal border-white hover:bg-white/90 w-full sm:w-auto"
           >
             Visit Us
           </Link>

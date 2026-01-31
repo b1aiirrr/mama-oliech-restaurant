@@ -1,0 +1,105 @@
+'use client';
+
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { menuItems, type MenuCategory, type MenuItem } from '@/data/menu';
+
+const categories: { value: MenuCategory | 'all'; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'fish', label: 'Fish' },
+  { value: 'accompaniments', label: 'Accompaniments' },
+  { value: 'drinks', label: 'Drinks' },
+];
+
+function formatPrice(price: number) {
+  return `KES ${price.toLocaleString()}`;
+}
+
+function MenuCard({ item }: { item: MenuItem }) {
+  return (
+    <motion.article
+      layout
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="bg-white rounded-2xl shadow-md overflow-hidden border border-terracotta-100 hover:shadow-lg hover:border-terracotta-200 transition-all"
+    >
+      <div className="p-5 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+          <div>
+            <h3 className="font-display text-lg font-semibold text-charcoal">{item.name}</h3>
+            <p className="mt-1 text-charcoal/80 text-sm sm:text-base">{item.description}</p>
+          </div>
+          <p className="font-semibold text-terracotta-600 text-lg whitespace-nowrap sm:ml-4">
+            {formatPrice(item.price)}
+          </p>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
+export function Menu() {
+  const [activeCategory, setActiveCategory] = useState<MenuCategory | 'all'>('all');
+
+  const filtered =
+    activeCategory === 'all'
+      ? menuItems
+      : menuItems.filter((item) => item.category === activeCategory);
+
+  return (
+    <section id="menu" className="section-padding bg-cream" aria-labelledby="menu-heading">
+      <div className="container-wide">
+        <motion.div
+          className="text-center max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 id="menu-heading" className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-charcoal">
+            Our Menu
+          </h2>
+          <p className="mt-4 text-lg text-charcoal/80">
+            Fresh from the lake, made with love. Informational menu — order when you visit.
+          </p>
+        </motion.div>
+
+        {/* Category filters - tap friendly */}
+        <motion.div
+          className="mt-10 flex flex-wrap justify-center gap-2"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+        >
+          {categories.map((cat) => (
+            <button
+              key={cat.value}
+              type="button"
+              onClick={() => setActiveCategory(cat.value)}
+              className={`min-h-[48px] px-6 py-3 rounded-full font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:ring-offset-2 ${
+                activeCategory === cat.value
+                  ? 'bg-terracotta-600 text-white'
+                  : 'bg-white text-charcoal border border-terracotta-200 hover:border-terracotta-400 hover:bg-terracotta-50'
+              }`}
+              aria-pressed={activeCategory === cat.value}
+              aria-label={`Filter menu by ${cat.label}`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </motion.div>
+
+        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <AnimatePresence mode="popLayout">
+            {filtered.map((item) => (
+              <MenuCard key={item.id} item={item} />
+            ))}
+          </AnimatePresence>
+        </div>
+      </div>
+    </section>
+  );
+}

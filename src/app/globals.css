@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand palette */
+  --terracotta: #c5533d;
+  --terracotta-dark: #a44234;
+  --terracotta-light: #e38d72;
+  --forest: #166534;
+  --forest-light: #22c55e;
+  --lake: #0369a1;
+  --lake-light: #0ea5e9;
+  --cream: #fdf5f2;
+  --charcoal: #1a1a1a;
+  --white: #ffffff;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream text-charcoal antialiased;
+    font-family: var(--font-body), system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display), system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full px-8 py-4 text-lg font-semibold text-white bg-terracotta-600 hover:bg-terracotta-700 focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:ring-offset-2 transition-colors min-h-[48px] min-w-[44px];
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full px-8 py-4 text-lg font-semibold text-terracotta-700 bg-white border-2 border-terracotta-600 hover:bg-terracotta-50 focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:ring-offset-2 transition-colors min-h-[48px] min-w-[44px];
+  }
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24;
+  }
+  .container-narrow {
+    @apply max-w-4xl mx-auto;
+  }
+  .container-wide {
+    @apply max-w-7xl mx-auto;
+  }
+}
+
+/* High contrast for accessibility */
+@media (prefers-contrast: high) {
+  :root {
+    --terracotta: #a44234;
+    --forest: #14532d;
+  }
+}

@@ -1,0 +1,15 @@
+
+ name                               value               environments        created    
+ MPESA_BUSINESS_SHORT_CODE          Encrypted           Production          1h ago     
+ NEXT_PUBLIC_MPESA_CALLBACK_URL     Encrypted           Production          1h ago     
+ MPESA_ENVIRONMENT                  Encrypted           Production          1h ago     
+ NEXT_PUBLIC_ADMIN_PIN              Encrypted           Production          1h ago     
+ ADMIN_PIN                          Encrypted           Production          1h ago     
+ MPESA_PASSKEY                      Encrypted           Production          1h ago     
+ MPESA_CONSUMER_SECRET              Encrypted           Production          1h ago     
+ MPESA_CONSUMER_KEY                 Encrypted           Production          1h ago     
+ TESTSPRITE_API_KEY                 Encrypted           Production          1h ago     
+ SUPABASE_SERVICE_ROLE_KEY          Encrypted           Production          1h ago     
+ NEXT_PUBLIC_SUPABASE_ANON_KEY      Encrypted           Production          1h ago     
+ NEXT_PUBLIC_SUPABASE_URL           Encrypted           Production          1h ago     
+

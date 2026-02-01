@@ -27,7 +27,7 @@ export default function AdminPage() {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        if (pin === (process.env.NEXT_PUBLIC_ADMIN_PIN || '2026')) {
+        if (pin === (process.env.NEXT_PUBLIC_ADMIN_PIN?.trim() || '2026')) {
             setIsAuthenticated(true);
             setError('');
         } else {

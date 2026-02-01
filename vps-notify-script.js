@@ -17,8 +17,8 @@ const app = express();
 const port = 3000;
 
 // Config - Replace with your own!
-const TELEGRAM_BOT_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN';
-const TELEGRAM_CHAT_ID = 'YOUR_TELEGRAM_CHAT_ID';
+const TELEGRAM_BOT_TOKEN = '8101525165:AAFqxVu7qP7hXnGjD_3mkVaBW7loQaItzvY';
+const TELEGRAM_CHAT_ID = '1101508903';
 
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false });
 

@@ -33,6 +33,8 @@ export function AdminMenuEditor() {
             const { menuItems } = await import('@/data/menu');
 
             let successCount = 0;
+            const errors: string[] = [];
+
             for (const item of menuItems) {
                 try {
                     const res = await fetch('/api/admin/menu', {
@@ -48,19 +50,27 @@ export function AdminMenuEditor() {
                         }),
                     });
 
+                    const data = await res.json();
                     if (res.ok) {
                         successCount++;
                     } else {
-                        const errorData = await res.json();
-                        console.error(`Failed to import "${item.name}":`, errorData.error);
+                        errors.push(`${item.name}: ${data.error || 'Unknown error'}`);
+                        console.error(`Failed to import "${item.name}":`, data.error);
                     }
-                } catch (err) {
+                } catch (err: any) {
+                    errors.push(`${item.name}: ${err.message}`);
                     console.error(`Network or parse error on "${item.name}":`, err);
                 }
             }
 
             if (successCount === 0) {
-                alert('Import failed: 0 items were saved. \n\nThis usually means the "menu_items" table is missing in your Supabase database. Please check the "supabase-schema.sql" file and run the SQL in your Supabase Dashboard.');
+                const errorMsg = errors.length > 0
+                    ? `Import failed. \n\nErrors:\n${errors.slice(0, 3).join('\n')}${errors.length > 3 ? '\n...' : ''}`
+                    : 'Import failed: 0 items were saved.';
+
+                alert(errorMsg + '\n\nThis usually means the "menu_items" table is missing columns or the Supabase Service Role Key is not set in Vercel. Please check your Vercel logs.');
+            } else if (errors.length > 0) {
+                alert(`Imported ${successCount} items, but ${errors.length} failed.\n\nFirst error: ${errors[0]}`);
             } else {
                 alert(`Successfully imported ${successCount} items!`);
             }

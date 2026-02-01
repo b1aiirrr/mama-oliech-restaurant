@@ -99,7 +99,7 @@ export const menuItems: MenuItem[] = [
     description: 'Still or sparkling. Stay refreshed.',
     price: 80,
     category: 'drinks',
-    image: '/menu/keringet.png',
+    image: '/menu/water-bottles.webp',
   },
   {
     id: 'soda',

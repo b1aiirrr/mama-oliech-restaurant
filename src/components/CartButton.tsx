@@ -54,22 +54,22 @@ export function CartButton() {
                         style={{ backgroundColor: '#ffffff', width: '100vw', height: '100dvh' }}
                     >
                         {/* Header */}
-                        <div className="flex-none p-6 sm:p-10 border-b border-gray-100 bg-white">
+                        <div className="flex-none p-4 sm:p-6 border-b border-gray-100 bg-white">
                             <div className="max-w-7xl mx-auto flex items-center justify-between">
                                 <div className="flex flex-col">
-                                    <h2 className="font-display text-3xl sm:text-4xl font-bold text-charcoal">
+                                    <h2 className="font-display text-2xl font-bold text-charcoal">
                                         Your Bag
                                     </h2>
-                                    <p className="text-terracotta-600 font-bold text-base uppercase tracking-widest mt-1">
-                                        {itemCount} Items Selected
+                                    <p className="text-terracotta-600 font-bold text-xs uppercase tracking-widest mt-0.5">
+                                        {itemCount} Items
                                     </p>
                                 </div>
                                 <button
                                     onClick={() => setIsOpen(false)}
-                                    className="p-5 hover:bg-gray-100 rounded-full transition-all bg-gray-50 text-charcoal active:scale-90"
+                                    className="p-3 hover:bg-gray-100 rounded-full transition-all bg-gray-50 text-charcoal active:scale-90"
                                     aria-label="Close cart"
                                 >
-                                    <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
@@ -77,8 +77,8 @@ export function CartButton() {
                         </div>
 
                         {/* Items Area */}
-                        <div className="flex-1 overflow-y-auto p-6 sm:p-20 bg-white">
-                            <div className="max-w-4xl mx-auto w-full">
+                        <div className="flex-1 overflow-y-auto p-4 sm:p-10 bg-white">
+                            <div className="max-w-3xl mx-auto w-full">
                                 {items.length === 0 ? (
                                     <div className="text-center py-32">
                                         <div className="mb-12 opacity-10">
@@ -86,22 +86,22 @@ export function CartButton() {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                             </svg>
                                         </div>
-                                        <p className="text-2xl font-display text-charcoal/30 mb-8 italic">Hungry? Your cart is empty...</p>
+                                        <p className="text-xl font-display text-charcoal/30 mb-6 italic">Hungry? Your cart is empty...</p>
                                         <button
                                             onClick={() => setIsOpen(false)}
-                                            className="btn-primary px-12 py-4 text-xl rounded-2xl shadow-xl shadow-terracotta-600/30"
+                                            className="btn-primary px-8 py-3 text-lg rounded-xl shadow-xl shadow-terracotta-600/30"
                                         >
                                             View Menu
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="space-y-16 pb-20">
+                                    <div className="space-y-6">
                                         {items.map((item) => (
                                             <div
                                                 key={item.id}
-                                                className="flex flex-col sm:flex-row gap-12 items-center sm:items-stretch"
+                                                className="flex gap-4 sm:gap-6 items-center border-b border-gray-50 pb-6 last:border-0"
                                             >
-                                                <div className="relative w-full sm:w-64 h-80 sm:h-auto rounded-[3rem] overflow-hidden flex-shrink-0 shadow-2xl">
+                                                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden flex-shrink-0 shadow-md">
                                                     <Image
                                                         src={item.image}
                                                         alt={item.name}
@@ -109,37 +109,35 @@ export function CartButton() {
                                                         className="object-cover"
                                                     />
                                                 </div>
-                                                <div className="flex-1 flex flex-col justify-between py-4 text-center sm:text-left w-full">
-                                                    <div>
-                                                        <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-4">
-                                                            <h3 className="font-display text-2xl sm:text-3xl font-bold text-charcoal">{item.name}</h3>
-                                                            <p className="text-terracotta-700 font-bold text-xl sm:text-2xl">
-                                                                {formatPrice(item.price)}
-                                                            </p>
-                                                        </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex justify-between items-start gap-2">
+                                                        <h3 className="font-display text-lg sm:text-xl font-bold text-charcoal truncate">{item.name}</h3>
+                                                        <p className="text-terracotta-700 font-bold text-base sm:text-lg whitespace-nowrap">
+                                                            {formatPrice(item.price)}
+                                                        </p>
                                                     </div>
-                                                    <div className="flex flex-col sm:flex-row items-center justify-between mt-12 gap-8">
-                                                        <div className="flex items-center gap-6 bg-gray-50 p-2 rounded-2xl border border-gray-100 shadow-inner">
+                                                    <div className="flex items-center justify-between mt-3">
+                                                        <div className="flex items-center gap-3 bg-gray-50 p-1 rounded-lg border border-gray-100">
                                                             <button
                                                                 onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                                                className="w-10 h-10 flex items-center justify-center bg-white rounded-full hover:bg-terracotta-600 hover:text-white text-xl font-bold transition-all shadow-md active:scale-90"
+                                                                className="w-7 h-7 flex items-center justify-center bg-white rounded-md hover:bg-terracotta-600 hover:text-white text-base font-bold transition-all shadow-sm active:scale-90"
                                                                 disabled={item.quantity <= 1}
                                                             >
                                                                 -
                                                             </button>
-                                                            <span className="font-bold text-xl min-w-[2rem] text-center">{item.quantity}</span>
+                                                            <span className="font-bold text-base min-w-[1.2rem] text-center">{item.quantity}</span>
                                                             <button
                                                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                                className="w-10 h-10 flex items-center justify-center bg-white rounded-full hover:bg-terracotta-600 hover:text-white text-xl font-bold transition-all shadow-md active:scale-90"
+                                                                className="w-7 h-7 flex items-center justify-center bg-white rounded-md hover:bg-terracotta-600 hover:text-white text-base font-bold transition-all shadow-sm"
                                                             >
                                                                 +
                                                             </button>
                                                         </div>
                                                         <button
                                                             onClick={() => removeFromCart(item.id)}
-                                                            className="text-red-500 hover:text-red-700 font-black uppercase tracking-widest text-sm py-4 px-8 rounded-full bg-red-50 hover:bg-red-100 transition-colors"
+                                                            className="text-red-500 hover:text-red-700 font-bold uppercase tracking-widest text-[9px] py-1.5 px-3 rounded-md bg-red-50 hover:bg-red-100 transition-colors"
                                                         >
-                                                            Remove Item
+                                                            Remove
                                                         </button>
                                                     </div>
                                                 </div>
@@ -151,21 +149,21 @@ export function CartButton() {
                         </div>
 
                         {/* Footer */}
-                        <div className="flex-none p-10 sm:p-20 border-t border-gray-100 bg-white">
-                            <div className="max-w-4xl mx-auto w-full space-y-12">
+                        <div className="flex-none p-4 sm:p-8 border-t border-gray-100 bg-white shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)]">
+                            <div className="max-w-3xl mx-auto w-full space-y-6">
                                 {items.length > 0 && (
-                                    <div className="flex flex-col gap-10">
-                                        <div className="flex justify-between items-end">
-                                            <span className="text-xl font-display text-charcoal/40 font-bold uppercase tracking-[0.3em]">Total Amount</span>
-                                            <span className="text-4xl sm:text-5xl font-display font-bold text-terracotta-600">{formatPrice(totalAmount)}</span>
+                                    <div className="flex flex-col gap-6">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-xs font-bold text-charcoal/40 uppercase tracking-[0.2em]">Total Amount</span>
+                                            <span className="text-2xl sm:text-3xl font-display font-bold text-terracotta-600">{formatPrice(totalAmount)}</span>
                                         </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                                        <div className="grid grid-cols-2 gap-3">
                                             <Link
                                                 href="/checkout"
                                                 onClick={() => setIsOpen(false)}
-                                                className="btn-primary py-5 text-xl text-center rounded-2xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                                className="btn-primary py-3 text-base text-center rounded-lg shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all"
                                             >
-                                                Proceed to Checkout
+                                                Checkout
                                             </Link>
                                             <button
                                                 onClick={() => {
@@ -173,15 +171,15 @@ export function CartButton() {
                                                         clearCart();
                                                     }
                                                 }}
-                                                className="btn-secondary py-5 text-xl rounded-2xl"
+                                                className="btn-secondary py-3 text-base rounded-lg"
                                             >
-                                                Clear Bag
+                                                Clear
                                             </button>
                                         </div>
                                     </div>
                                 )}
 
-                                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 opacity-30">
+                                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 opacity-30">
                                     <button
                                         onClick={() => {
                                             if (confirm('This will completely RESET your session and clear all cart/order data. Continue?')) {
@@ -189,11 +187,11 @@ export function CartButton() {
                                                 window.location.reload();
                                             }
                                         }}
-                                        className="text-charcoal hover:opacity-100 transition-opacity text-xs uppercase font-bold tracking-[0.4em]"
+                                        className="text-charcoal hover:opacity-100 transition-opacity text-[9px] uppercase font-bold tracking-[0.4em]"
                                     >
                                         Emergency Session Reset
                                     </button>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.5em]">Mama Oliech Restaurant • Secure Checkout</p>
+                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">Mama Oliech Restaurant • Secure Checkout</p>
                                 </div>
                             </div>
                         </div>

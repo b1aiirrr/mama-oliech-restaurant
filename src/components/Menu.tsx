@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { menuItems, type MenuCategory, type MenuItem } from '@/data/menu';
@@ -90,11 +90,38 @@ function MenuCard({ item }: { item: MenuItem }) {
 
 export function Menu() {
   const [activeCategory, setActiveCategory] = useState<MenuCategory | 'all'>('all');
+  const [dynamicItems, setDynamicItems] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchMenu() {
+      try {
+        const response = await fetch('/api/admin/menu');
+        const data = await response.json();
+        if (response.ok && Array.isArray(data) && data.length > 0) {
+          // Map database field names to matches frontend expectation
+          const mapped = data.filter((item: any) => item.is_available).map((item: any) => ({
+            ...item,
+            image: item.image_url || item.image // support both
+          }));
+          setDynamicItems(mapped);
+        }
+      } catch (error) {
+        console.error('Failed to fetch dynamic menu:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchMenu();
+  }, []);
+
+  // Use dynamic items if available, otherwise fallback to static data
+  const baseItems = dynamicItems.length > 0 ? dynamicItems : menuItems;
 
   const filtered =
     activeCategory === 'all'
-      ? menuItems
-      : menuItems.filter((item) => item.category === activeCategory);
+      ? baseItems
+      : baseItems.filter((item) => item.category === activeCategory);
 
   return (
     <section id="menu" className="section-padding bg-cream" aria-labelledby="menu-heading">
@@ -139,13 +166,19 @@ export function Menu() {
           ))}
         </motion.div>
 
-        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <AnimatePresence mode="popLayout">
-            {filtered.map((item) => (
-              <MenuCard key={item.id} item={item} />
-            ))}
-          </AnimatePresence>
-        </div>
+        {loading && dynamicItems.length === 0 ? (
+          <div className="mt-20 flex justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-terracotta-600"></div>
+          </div>
+        ) : (
+          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <AnimatePresence mode="popLayout">
+              {filtered.map((item) => (
+                <MenuCard key={item.id} item={item} />
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
     </section>
   );

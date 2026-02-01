@@ -11,6 +11,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     // Pages that should show the full-screen immersive UI (no global header/footer)
     const isImmersivePage = pathname?.startsWith('/checkout') ||
         pathname?.startsWith('/payment') ||
+        pathname?.startsWith('/admin') ||
         pathname?.startsWith('/order-confirmation');
 
     return (

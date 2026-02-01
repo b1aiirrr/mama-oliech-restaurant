@@ -283,9 +283,19 @@ export default function AdminPage() {
                                                     <span className="text-charcoal/40">Name</span>
                                                     <span className="text-charcoal">{selectedOrder.customer_name}</span>
                                                 </div>
-                                                <div className="flex justify-between">
+                                                <div className="flex justify-between items-center">
                                                     <span className="text-charcoal/40">Phone</span>
-                                                    <span className="text-charcoal">{selectedOrder.customer_phone}</span>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-charcoal">{selectedOrder.customer_phone}</span>
+                                                        <a
+                                                            href={`https://wa.me/${selectedOrder.customer_phone.replace(/\+/g, '').replace(/\s/g, '')}?text=${encodeURIComponent(`Hello ${selectedOrder.customer_name}, this is Mama Oliech Restaurant. We have received your order ${selectedOrder.order_number}.`)}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-xs bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded-lg font-bold transition-all flex items-center gap-1"
+                                                        >
+                                                            <span>💬</span> WhatsApp
+                                                        </a>
+                                                    </div>
                                                 </div>
                                                 {selectedOrder.customer_email && (
                                                     <div className="flex justify-between">

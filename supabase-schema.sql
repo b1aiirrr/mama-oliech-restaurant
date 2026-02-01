@@ -4,7 +4,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Orders table
-CREATE TABLE orders (
+CREATE TABLE IF NOT EXISTS orders (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     order_number TEXT UNIQUE NOT NULL,
     customer_name TEXT NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE orders (
 );
 
 -- Order items table
-CREATE TABLE order_items (
+CREATE TABLE IF NOT EXISTS order_items (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     menu_item_id TEXT NOT NULL,
@@ -34,12 +34,12 @@ CREATE TABLE order_items (
 );
 
 -- Create indexes for better performance
-CREATE INDEX idx_orders_order_number ON orders(order_number);
-CREATE INDEX idx_orders_customer_phone ON orders(customer_phone);
-CREATE INDEX idx_orders_payment_status ON orders(payment_status);
-CREATE INDEX idx_orders_order_status ON orders(order_status);
-CREATE INDEX idx_orders_created_at ON orders(created_at DESC);
-CREATE INDEX idx_order_items_order_id ON order_items(order_id);
+CREATE INDEX IF NOT EXISTS idx_orders_order_number ON orders(order_number);
+CREATE INDEX IF NOT EXISTS idx_orders_customer_phone ON orders(customer_phone);
+CREATE INDEX IF NOT EXISTS idx_orders_payment_status ON orders(payment_status);
+CREATE INDEX IF NOT EXISTS idx_orders_order_status ON orders(order_status);
+CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id);
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -50,7 +50,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger to auto-update updated_at
+-- Trigger to auto-update updated_at for orders
+DROP TRIGGER IF EXISTS update_orders_updated_at ON orders;
 CREATE TRIGGER update_orders_updated_at
     BEFORE UPDATE ON orders
     FOR EACH ROW
@@ -74,3 +75,27 @@ BEGIN
     RETURN new_order_number;
 END;
 $$ LANGUAGE plpgsql;
+
+-- === MENU MANAGEMENT ===
+
+-- Menu items table
+CREATE TABLE IF NOT EXISTS menu_items (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT NOT NULL,
+    description TEXT,
+    price NUMERIC(10, 2) NOT NULL,
+    category TEXT NOT NULL CHECK (category IN ('fish', 'accompaniments', 'drinks')),
+    image_url TEXT,
+    is_available BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Index for category
+CREATE INDEX IF NOT EXISTS idx_menu_items_category ON menu_items(category);
+
+-- Trigger for menu_items updated_at
+DROP TRIGGER IF EXISTS update_menu_items_updated_at ON menu_items;
+CREATE TRIGGER update_menu_items_updated_at 
+    BEFORE UPDATE ON menu_items 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

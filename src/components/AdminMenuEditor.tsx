@@ -34,22 +34,36 @@ export function AdminMenuEditor() {
 
             let successCount = 0;
             for (const item of menuItems) {
-                const res = await fetch('/api/admin/menu', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: item.name,
-                        description: item.description,
-                        price: item.price,
-                        category: item.category,
-                        image_url: item.image,
-                        is_available: true
-                    }),
-                });
-                if (res.ok) successCount++;
+                try {
+                    const res = await fetch('/api/admin/menu', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: item.name,
+                            description: item.description,
+                            price: item.price,
+                            category: item.category,
+                            image_url: item.image,
+                            is_available: true
+                        }),
+                    });
+
+                    if (res.ok) {
+                        successCount++;
+                    } else {
+                        const errorData = await res.json();
+                        console.error(`Failed to import "${item.name}":`, errorData.error);
+                    }
+                } catch (err) {
+                    console.error(`Network or parse error on "${item.name}":`, err);
+                }
             }
 
-            alert(`Successfully imported ${successCount} items!`);
+            if (successCount === 0) {
+                alert('Import failed: 0 items were saved. \n\nThis usually means the "menu_items" table is missing in your Supabase database. Please check the "supabase-schema.sql" file and run the SQL in your Supabase Dashboard.');
+            } else {
+                alert(`Successfully imported ${successCount} items!`);
+            }
             // Add a small delay for Supabase indexing/replication
             setTimeout(() => fetchMenu(), 500);
         } catch (error) {

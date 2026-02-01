@@ -133,13 +133,18 @@ export default function AdminPage() {
     }
 
     return (
-        <div className="min-h-screen bg-cream py-8">
+        <div className="min-h-screen bg-cream py-12">
             <div className="container max-w-7xl mx-auto px-4">
                 {/* Header */}
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="font-display text-4xl font-semibold text-charcoal">
-                        Admin Dashboard
-                    </h1>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+                    <div>
+                        <h1 className="font-display text-4xl sm:text-5xl font-bold text-charcoal">
+                            Admin Dashboard
+                        </h1>
+                        <p className="text-charcoal/40 font-medium mt-2 uppercase tracking-widest text-sm">
+                            Management Portal
+                        </p>
+                    </div>
                     <div className="flex items-center gap-4">
                         <div className="bg-white p-1 rounded-xl shadow-inner border border-gray-100 hidden sm:flex">
                             <button

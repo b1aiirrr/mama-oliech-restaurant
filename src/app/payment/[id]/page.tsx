@@ -416,8 +416,8 @@ export default function PaymentPage() {
 
                                         <div className="flex flex-col items-center gap-4 pt-6 mt-4 border-t border-gray-100/50">
                                             <div className="flex items-center gap-5 opacity-40">
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Visa_2014.svg" className="h-2.5" alt="Visa" />
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" className="h-5" alt="Mastercard" />
+                                                <img src="https://raw.githubusercontent.com/aaronfriel/stripe-payment-icons/master/dist/svg/visa.svg" className="h-2.5" alt="Visa" />
+                                                <img src="https://raw.githubusercontent.com/aaronfriel/stripe-payment-icons/master/dist/svg/mastercard.svg" className="h-5" alt="Mastercard" />
                                             </div>
                                             <div className="flex items-center gap-2 text-[9px] font-bold text-gray-400 tracking-[0.2em] uppercase">
                                                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>

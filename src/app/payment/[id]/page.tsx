@@ -12,8 +12,12 @@ export default function PaymentPage() {
 
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<'stk' | 'qr'>('stk');
     const [paying, setPaying] = useState(false);
     const [error, setError] = useState('');
+    const [qrCodeImage, setQrCodeImage] = useState<string | null>(null);
+    const [qrLoading, setQrLoading] = useState(false);
+    const [qrError, setQrError] = useState('');
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -71,6 +75,37 @@ export default function PaymentPage() {
             setError(err.message);
             setPaying(false);
         }
+    };
+
+    const fetchQrCode = async () => {
+        if (qrCodeImage || qrLoading) return;
+        setQrLoading(true);
+        setQrError('');
+        try {
+            const response = await fetch('/api/mpesa/qr', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: order!.total_amount,
+                    order_id: order!.id,
+                }),
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Failed to fetch QR');
+            setQrCodeImage(`data:image/png;base64,${data.qrCode}`);
+            
+            // Start polling as soon as QR is displayed
+            pollPaymentStatus();
+        } catch (err: any) {
+            setQrError(err.message);
+        } finally {
+            setQrLoading(false);
+        }
+    };
+
+    const handleTabChange = (tab: 'stk' | 'qr') => {
+        setActiveTab(tab);
+        if (tab === 'qr') fetchQrCode();
     };
 
     const pollPaymentStatus = async () => {
@@ -176,73 +211,139 @@ export default function PaymentPage() {
                         </div>
 
                         {/* Action Side */}
-                        <div className="p-8 sm:p-12 flex flex-col justify-center bg-gray-50/50">
-                            {!paying ? (
-                                <div className="space-y-8">
-                                    <div className="space-y-4">
-                                        <h3 className="text-xl font-bold text-charcoal">Instructions</h3>
-                                        <div className="space-y-4 text-charcoal/70">
-                                            <p className="flex items-start gap-3">
-                                                <span className="font-bold text-terracotta-600">01.</span>
-                                                Ensure your phone <strong>{order.customer_phone}</strong> is unlocked and has enough balance.
-                                            </p>
-                                            <p className="flex items-start gap-3">
-                                                <span className="font-bold text-terracotta-600">02.</span>
-                                                Click the button below to receive an M-Pesa STK push.
-                                            </p>
-                                            <p className="flex items-start gap-3">
-                                                <span className="font-bold text-terracotta-600">03.</span>
-                                                Enter your M-Pesa PIN when prompted on your phone.
-                                            </p>
+                        <div className="p-8 sm:p-12 flex flex-col justify-start bg-gray-50/50">
+                            
+                            {/* Payment Tabs */}
+                            <div className="flex bg-gray-200/50 p-1 rounded-xl mb-8">
+                                <button 
+                                    onClick={() => handleTabChange('stk')}
+                                    className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all ${activeTab === 'stk' ? 'bg-white text-charcoal shadow-sm' : 'text-charcoal/50 hover:text-charcoal'}`}
+                                >
+                                    Phone Prompt
+                                </button>
+                                <button 
+                                    onClick={() => handleTabChange('qr')}
+                                    className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all ${activeTab === 'qr' ? 'bg-white text-charcoal shadow-sm' : 'text-charcoal/50 hover:text-charcoal'}`}
+                                >
+                                    Scan QR
+                                </button>
+                            </div>
+
+                            {activeTab === 'stk' && (
+                                !paying ? (
+                                    <div className="space-y-8 animate-in fade-in duration-300">
+                                        <div className="space-y-4">
+                                            <h3 className="text-xl font-bold text-charcoal">Instructions</h3>
+                                            <div className="space-y-4 text-charcoal/70">
+                                                <p className="flex items-start gap-3">
+                                                    <span className="font-bold text-terracotta-600">01.</span>
+                                                    Ensure your phone <strong>{order.customer_phone}</strong> is unlocked and has enough balance.
+                                                </p>
+                                                <p className="flex items-start gap-3">
+                                                    <span className="font-bold text-terracotta-600">02.</span>
+                                                    Click the button below to receive an M-Pesa STK push.
+                                                </p>
+                                                <p className="flex items-start gap-3">
+                                                    <span className="font-bold text-terracotta-600">03.</span>
+                                                    Enter your M-Pesa PIN when prompted on your phone.
+                                                </p>
+                                            </div>
+                                        </div>
+    
+                                        {error && (
+                                            <div className="bg-red-50 border-l-4 border-red-500 p-4 text-red-700 font-medium text-sm rounded-r-xl">
+                                                {error}
+                                            </div>
+                                        )}
+    
+                                        <div className="space-y-4">
+                                            <button
+                                                onClick={initiateMpesaPayment}
+                                                className="btn-primary w-full py-4 text-lg rounded-xl shadow-xl shadow-terracotta-600/20 active:scale-[0.98] transition-all"
+                                            >
+                                                Send M-Pesa Prompt
+                                            </button>
+                                            <button
+                                                onClick={() => router.push('/')}
+                                                className="w-full py-4 text-charcoal/40 hover:text-charcoal font-bold uppercase tracking-widest text-xs transition-colors"
+                                            >
+                                                Cancel Order
+                                            </button>
                                         </div>
                                     </div>
+                                ) : (
+                                    <div className="text-center space-y-8 animate-in fade-in zoom-in duration-500 mt-10">
+                                        <div className="relative inline-block">
+                                            <div className="animate-ping absolute inset-0 rounded-full bg-terracotta-500/20 h-full w-full"></div>
+                                            <div className="relative p-6 bg-white rounded-full shadow-xl border-4 border-terracotta-100">
+                                                <svg className="w-12 h-12 text-terracotta-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-4">Awaiting PIN...</h3>
+                                            <p className="text-charcoal/60 leading-relaxed text-base">
+                                                An M-Pesa prompt has been sent to <br />
+                                                <span className="text-charcoal font-bold text-lg">{order.customer_phone}</span>
+                                            </p>
+                                        </div>
+                                        {error && (
+                                            <div className="bg-red-50 border-l-4 border-red-500 p-4 text-red-700 font-medium text-sm rounded-r-xl text-left">
+                                                {error}
+                                            </div>
+                                        )}
+                                        <div className="flex justify-center gap-2">
+                                            <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce [animation-delay:-0.3s]"></div>
+                                            <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce [animation-delay:-0.15s]"></div>
+                                            <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce"></div>
+                                        </div>
+                                        <div className="space-y-4">
+                                            <p className="text-xs text-charcoal/40 font-medium uppercase tracking-widest">
+                                                System will automatically confirm once paid
+                                            </p>
+                                            {error && (
+                                                <button onClick={() => setPaying(false)} className="text-terracotta-600 text-sm font-bold border-b border-terracotta-600">Try Again</button>
+                                            )}
+                                        </div>
+                                    </div>
+                                )
+                            )}
 
-                                    {error && (
+                            {activeTab === 'qr' && (
+                                <div className="space-y-8 animate-in fade-in duration-300">
+                                    <div className="text-center space-y-4">
+                                        <h3 className="text-xl font-bold text-charcoal">Scan to Pay</h3>
+                                        <p className="text-charcoal/70 text-sm">Open your M-Pesa or MySafaricom App on your phone and scan the QR code below.</p>
+                                    </div>
+
+                                    {qrLoading ? (
+                                        <div className="flex justify-center items-center py-12">
+                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-terracotta-600"></div>
+                                        </div>
+                                    ) : qrError ? (
                                         <div className="bg-red-50 border-l-4 border-red-500 p-4 text-red-700 font-medium text-sm rounded-r-xl">
-                                            {error}
+                                            {qrError}
+                                            <button onClick={fetchQrCode} className="ml-4 underline font-bold">Retry</button>
                                         </div>
-                                    )}
+                                    ) : qrCodeImage ? (
+                                        <div className="flex flex-col items-center space-y-6">
+                                            <div className="p-4 bg-white rounded-2xl shadow-xl border-2 border-gray-100 relative group">
+                                                <img src={qrCodeImage} alt="M-Pesa Dynamic QR" className="w-48 h-48 object-contain rounded-lg" />
+                                            </div>
+                                            <div className="flex items-center gap-3 text-terracotta-600 bg-terracotta-50 px-4 py-2 rounded-full">
+                                                <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-ping"></div>
+                                                <p className="text-sm font-bold uppercase tracking-widest">Awaiting Payment...</p>
+                                            </div>
+                                        </div>
+                                    ) : null}
 
-                                    <div className="space-y-4">
-                                        <button
-                                            onClick={initiateMpesaPayment}
-                                            className="btn-primary w-full py-4 text-lg rounded-xl shadow-xl shadow-terracotta-600/20 active:scale-[0.98] transition-all"
-                                        >
-                                            Send M-Pesa Prompt
-                                        </button>
-                                        <button
-                                            onClick={() => router.push('/')}
-                                            className="w-full py-4 text-charcoal/40 hover:text-charcoal font-bold uppercase tracking-widest text-xs transition-colors"
-                                        >
-                                            Cancel Order
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="text-center space-y-8 animate-in fade-in zoom-in duration-500">
-                                    <div className="relative inline-block">
-                                        <div className="animate-ping absolute inset-0 rounded-full bg-terracotta-500/20 h-full w-full"></div>
-                                        <div className="relative p-6 bg-white rounded-full shadow-xl border-4 border-terracotta-100">
-                                            <svg className="w-12 h-12 text-terracotta-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-4">Awaiting PIN...</h3>
-                                        <p className="text-charcoal/60 leading-relaxed text-base">
-                                            An M-Pesa prompt has been sent to <br />
-                                            <span className="text-charcoal font-bold text-lg">{order.customer_phone}</span>
-                                        </p>
-                                    </div>
-                                    <div className="flex justify-center gap-2">
-                                        <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce [animation-delay:-0.3s]"></div>
-                                        <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce [animation-delay:-0.15s]"></div>
-                                        <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce"></div>
-                                    </div>
-                                    <p className="text-xs text-charcoal/40 font-medium uppercase tracking-widest">
-                                        System will automatically confirm once paid
-                                    </p>
+                                    <button
+                                        onClick={() => router.push('/')}
+                                        className="w-full py-4 text-charcoal/40 hover:text-charcoal font-bold uppercase tracking-widest text-xs transition-colors mt-8"
+                                    >
+                                        Cancel Order
+                                    </button>
                                 </div>
                             )}
                         </div>

@@ -14,7 +14,7 @@ export default function PaymentPage() {
 
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'stk' | 'qr' | 'stripe' | 'airtm'>('stk');
+    const [activeTab, setActiveTab] = useState<'stk' | 'qr' | 'stripe'>('stk');
     const [paying, setPaying] = useState(false);
     const [stripeLoading, setStripeLoading] = useState(false);
     const [error, setError] = useState('');
@@ -133,8 +133,9 @@ export default function PaymentPage() {
         setError('Airtm integration is currently in sandbox mode. Checkout not available for this currency yet.');
     };
 
-    const handleTabChange = (tab: 'stk' | 'qr' | 'stripe' | 'airtm') => {
+    const handleTabChange = (tab: 'stk' | 'qr' | 'stripe') => {
         setActiveTab(tab);
+        setError('');
         if (tab === 'qr') fetchQrCode();
     };
 
@@ -263,12 +264,6 @@ export default function PaymentPage() {
                                 >
                                     Card
                                 </button>
-                                <button 
-                                    onClick={() => handleTabChange('airtm')}
-                                    className={`flex-1 py-3 text-xs font-bold rounded-[0.9rem] transition-all ${activeTab === 'airtm' ? 'bg-white text-charcoal shadow-md scale-[1.02]' : 'text-charcoal/50 hover:text-charcoal'}`}
-                                >
-                                    Airtm
-                                </button>
                             </div>
 
                             {(activeTab === 'stk' || activeTab === 'qr') && (
@@ -391,7 +386,7 @@ export default function PaymentPage() {
                                 <div className="space-y-10 animate-in slide-in-from-right-4 duration-500 py-4">
                                     <div className="text-center space-y-4">
                                         <div className="flex justify-center gap-4 mb-4 opacity-50 grayscale group-hover:grayscale-0 transition-all">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" className="h-6" alt="Stripe" />
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" className="h-4" alt="Stripe" />
                                         </div>
                                         <h3 className="text-2xl font-bold text-charcoal tracking-tight">Pay securely by Card</h3>
                                         <p className="text-charcoal/50 text-sm max-w-xs mx-auto">We accept Visa, Mastercard, American Express, Apple Pay, and Google Pay.</p>
@@ -419,47 +414,17 @@ export default function PaymentPage() {
                                             )}
                                         </button>
 
-                                        <div className="flex flex-col items-center gap-4 pt-4 border-t border-gray-100">
-                                            <div className="flex gap-4">
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" className="h-4 opacity-30" alt="Visa" />
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" className="h-4 opacity-30" alt="Mastercard" />
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" className="h-4 opacity-30" alt="PayPal" />
+                                        <div className="flex flex-col items-center gap-4 pt-6 mt-4 border-t border-gray-100/50">
+                                            <div className="flex items-center gap-5 opacity-40">
+                                                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Visa_2014.svg" className="h-2.5" alt="Visa" />
+                                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" className="h-5" alt="Mastercard" />
                                             </div>
-                                            <p className="text-[10px] text-gray-400 font-medium flex items-center gap-2">
-                                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 13a3 3 0 110-6 3 3 0 010 6z"/></svg>
-                                                AES-256 BANK-LEVEL SECURITY
-                                            </p>
+                                            <div className="flex items-center gap-2 text-[9px] font-bold text-gray-400 tracking-[0.2em] uppercase">
+                                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                                                Secure Stripe Gateway
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
-
-                            {activeTab === 'airtm' && (
-                                <div className="space-y-10 animate-in slide-in-from-right-4 duration-500 py-4 text-center">
-                                    <div className="space-y-4">
-                                        <img src="https://airtm.com/wp-content/uploads/2023/12/logo-airtm.png" className="h-10 mx-auto" alt="Airtm" />
-                                        <h3 className="text-2xl font-bold text-charcoal tracking-tight font-display">Pay with Airtm</h3>
-                                        <p className="text-charcoal/50 text-sm max-w-xs mx-auto leading-relaxed">
-                                            Use your Airtm balance to pay instantly using local currencies or crypto.
-                                        </p>
-                                    </div>
-
-                                    {error && (
-                                        <div className="bg-red-50 border-l-4 border-red-500 p-4 text-red-700 font-medium text-sm rounded-r-xl">
-                                            {error}
-                                        </div>
-                                    )}
-
-                                    <button
-                                        onClick={handleAirtmClick}
-                                        className="w-full bg-[#00AEEF] hover:bg-[#009bd1] text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-cyan-500/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
-                                    >
-                                        Connect Airtm Account
-                                    </button>
-
-                                    <p className="text-[10px] text-charcoal/30 flex items-center justify-center gap-2 font-bold uppercase tracking-widest">
-                                        Redirects to secure login
-                                    </p>
                                 </div>
                             )}
                         </div>

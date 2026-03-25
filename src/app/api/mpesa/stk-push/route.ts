@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
                     Password: password,
                     Timestamp: timestamp,
                     TransactionType: 'CustomerPayBillOnline',
-                    Amount: Math.max(1, Math.round(amount)),
+                    Amount: process.env.MPESA_ENVIRONMENT === 'sandbox' ? 1 : Math.max(1, Math.round(amount)),
                     PartyA: formattedPhone,
                     PartyB: shortCode,
                     PhoneNumber: formattedPhone,

@@ -36,8 +36,8 @@ export default function CheckoutPage() {
                 throw new Error('Your cart is empty');
             }
 
-            // Validate phone number (Kenyan format)
-            const phoneRegex = /^(254|0)[17]\d{8}$/;
+            // Validate phone number (Kenyan format: 07XX, 01XX, 254…, +254…)
+            const phoneRegex = /^(\+?254|0)[17]\d{8}$/;
             if (!phoneRegex.test(customerInfo.phone.replace(/\s/g, ''))) {
                 throw new Error('Please enter a valid Kenyan phone number (e.g., 0712345678 or 254712345678)');
             }

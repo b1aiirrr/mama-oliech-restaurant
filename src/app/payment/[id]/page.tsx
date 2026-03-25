@@ -80,19 +80,27 @@ export default function PaymentPage() {
         const interval = setInterval(async () => {
             attempts++;
 
-            const { data } = await supabase
-                .from('orders')
-                .select('payment_status')
-                .eq('id', orderId)
-                .single();
+            try {
+                const { data } = await supabase
+                    .from('orders')
+                    .select('payment_status')
+                    .eq('id', orderId)
+                    .single();
 
-            if (data?.payment_status === 'paid') {
-                clearInterval(interval);
-                router.push(`/order-confirmation/${orderId}`);
-            } else if (data?.payment_status === 'failed' || attempts >= maxAttempts) {
-                clearInterval(interval);
-                setError('Payment failed or timed out. Please try again.');
-                setPaying(false);
+                if (data?.payment_status === 'paid') {
+                    clearInterval(interval);
+                    router.push(`/order-confirmation/${orderId}`);
+                } else if (data?.payment_status === 'failed') {
+                    clearInterval(interval);
+                    setError('Payment was not completed. You may have cancelled or there was an issue with your M-Pesa account.');
+                    setPaying(false);
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(interval);
+                    setError('We didn\'t receive a response in time. If you entered your PIN, please wait a moment and refresh. Otherwise, try again.');
+                    setPaying(false);
+                }
+            } catch {
+                // Ignore transient network errors during polling
             }
         }, 1000);
     };

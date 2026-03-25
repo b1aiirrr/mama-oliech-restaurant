@@ -56,6 +56,17 @@ export async function POST(request: NextRequest) {
     try {
         console.log('--- M-Pesa STK Push Start ---');
 
+        // Validate critical env vars early
+        const shortCode = process.env.MPESA_BUSINESS_SHORT_CODE;
+        const passkey = process.env.MPESA_PASSKEY;
+        if (!shortCode || !passkey) {
+            console.error('MPESA_BUSINESS_SHORT_CODE or MPESA_PASSKEY is not set.');
+            return NextResponse.json(
+                { error: 'M-Pesa is not configured on this server. Please contact support.' },
+                { status: 500 }
+            );
+        }
+
         const { phone_number, amount, order_id } = await request.json();
 
         // Validation
@@ -86,7 +97,7 @@ export async function POST(request: NextRequest) {
 
         // Generate password
         const password = Buffer.from(
-            `${process.env.MPESA_BUSINESS_SHORT_CODE}${process.env.MPESA_PASSKEY}${timestamp}`
+            `${shortCode}${passkey}${timestamp}`
         ).toString('base64');
 
         console.log(`Attempting STK Push to Safaricom for ${formattedPhone}...`);
@@ -102,17 +113,17 @@ export async function POST(request: NextRequest) {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    BusinessShortCode: process.env.MPESA_BUSINESS_SHORT_CODE,
+                    BusinessShortCode: shortCode,
                     Password: password,
                     Timestamp: timestamp,
                     TransactionType: 'CustomerPayBillOnline',
-                    Amount: Math.round(amount),
+                    Amount: Math.max(1, Math.round(amount)),
                     PartyA: formattedPhone,
-                    PartyB: process.env.MPESA_BUSINESS_SHORT_CODE,
+                    PartyB: shortCode,
                     PhoneNumber: formattedPhone,
                     CallBackURL: process.env.NEXT_PUBLIC_MPESA_CALLBACK_URL,
-                    AccountReference: order_id,
-                    TransactionDesc: `Mama Oliech Order ${order_id}`,
+                    AccountReference: String(order_id).slice(0, 12),
+                    TransactionDesc: `Payment for order`,
                 }),
                 cache: 'no-store'
             }

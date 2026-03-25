@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.src = '/logo.png';
+        img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                // Check if color is near white
+                if (data[i] > 240 && data[i+1] > 240 && data[i+2] > 240) {
+                    data[i+3] = 0; // Set alpha to 0 (transparent)
+                }
+            }
+            ctx.putImageData(imageData, 0, 0);
+            
+            // Create a link to download the result
+            const link = document.createElement('a');
+            link.download = 'logo-transparent.png';
+            link.href = canvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            
+            // Also log the data URL so I can copy it if needed
+            console.log('DATA_URL_START' + canvas.toDataURL('image/png') + 'DATA_URL_END');
+        };
+    </script>
+</body>
+</html>

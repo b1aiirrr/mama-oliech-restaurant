@@ -54,9 +54,9 @@ export function Footer() {
           <div className="text-center space-y-4">
             <h4 className="text-sm font-bold uppercase tracking-widest text-white">Bank Deposits</h4>
             <div className="bg-white/5 p-6 rounded-3xl border border-white/5 space-y-3">
-                <p className="text-xs text-cream/40 uppercase tracking-tighter font-bold">Equity Bank</p>
-                <p className="text-lg font-display text-terracotta-400">0123 4567 8901</p>
-                <p className="text-xs text-cream/40 px-4">Account: MAMA OLIECH RESTAURANT</p>
+                <p className="text-xs text-cream/40 uppercase tracking-tighter font-bold">I&M Bank</p>
+                <p className="text-lg font-display text-terracotta-400">0150 7455 3861 50</p>
+                <p className="text-xs text-cream/40 px-4 uppercase tracking-widest text-[10px]">Mama Oliech Restaurant</p>
                 <div className="pt-2">
                     <span className="text-[10px] bg-white/10 px-3 py-1 rounded-full text-white/60">Branch: Community, Nairobi</span>
                 </div>

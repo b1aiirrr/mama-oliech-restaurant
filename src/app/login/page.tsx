@@ -75,15 +75,8 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen bg-cream flex flex-col justify-center py-12 pt-32 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-                <Link href="/" className="flex flex-col items-center mb-6">
-                    <Image
-                        src="/logo.png"
-                        alt="Mama Oliech Restaurant Logo"
-                        width={100}
-                        height={100}
-                        className="w-24 h-24 mb-4"
-                    />
-                    <span className="font-display text-4xl font-bold tracking-tight text-terracotta-600">
+                <Link href="/" className="inline-block mb-6">
+                    <span className="font-display text-4xl font-bold tracking-tight text-charcoal">
                         Mama Oliech Restaurant
                     </span>
                 </Link>

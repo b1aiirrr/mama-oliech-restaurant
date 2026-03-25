@@ -48,9 +48,10 @@ export function Header() {
               alt="Mama Oliech Restaurant Logo"
               width={80}
               height={80}
-              className="w-14 h-14 sm:w-16 sm:h-16"
+              className="w-14 h-14 sm:w-16 sm:h-16 rounded-full mix-blend-multiply"
+              priority
             />
-            <span className="font-display text-lg sm:text-xl font-semibold text-charcoal">
+            <span className="font-display text-base sm:text-lg lg:text-xl font-semibold text-charcoal truncate max-w-[150px] sm:max-w-none">
               Mama Oliech Restaurant
             </span>
           </Link>

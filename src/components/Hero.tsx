@@ -14,7 +14,7 @@ export function Hero() {
       {/* Background image - high-res food / tilapia */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=1920&q=80"
+          src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=1200&q=75"
           alt="Fresh grilled tilapia and Kenyan sides on a plate - Mama Oliech signature dish"
           fill
           className="object-cover"

@@ -67,7 +67,12 @@ export function Footer() {
             <h4 className="text-sm font-bold uppercase tracking-widest text-white">Contact Us</h4>
             <p className="text-cream/80">Marcus Garvey Rd, Nairobi</p>
             <p className="text-cream/80">+254 700 000 000</p>
-            <p className="text-cream/80 hover:text-terracotta-400 transition-colors">hello@mamaoliech.com</p>
+            <a 
+                href="mailto:mamaoliechrestaurant2026@gmail.com" 
+                className="text-cream/80 hover:text-terracotta-400 transition-colors uppercase tracking-widest text-[10px] font-bold block overflow-hidden text-ellipsis"
+            >
+                mamaoliechrestaurant2026@gmail.com
+            </a>
           </div>
         </div>
         

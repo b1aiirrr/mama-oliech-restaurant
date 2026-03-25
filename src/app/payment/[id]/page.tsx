@@ -262,18 +262,7 @@ export default function PaymentPage() {
                                 >
                                     Scan QR
                                 </button>
-                                <button 
-                                    onClick={() => handleTabChange('stripe')}
-                                    className={`flex-1 py-3 text-[10px] font-bold rounded-[0.9rem] transition-all ${activeTab === 'stripe' ? 'bg-white text-charcoal shadow-md scale-[1.02]' : 'text-charcoal/50 hover:text-charcoal'}`}
-                                >
-                                    Card
-                                </button>
-                                <button 
-                                    onClick={() => handleTabChange('airtel')}
-                                    className={`flex-1 py-3 text-[10px] font-bold rounded-[0.9rem] transition-all ${activeTab === 'airtel' ? 'bg-white text-charcoal shadow-md scale-[1.02]' : 'text-charcoal/50 hover:text-charcoal'}`}
-                                >
-                                    Airtel
-                                </button>
+                                {/* Card and Airtel Archived for later */}
                             </div>
 
                             {(activeTab === 'stk' || activeTab === 'qr') && (

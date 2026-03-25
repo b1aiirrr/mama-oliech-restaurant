@@ -52,6 +52,7 @@ function MenuCard({ item }: { item: MenuItem }) {
             fill
             className="object-cover"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            priority={item.id === 'tilapia-whole' || item.id === 'tilapia-half'}
           />
         </motion.div>
         {/* Overlay gradient on hover */}

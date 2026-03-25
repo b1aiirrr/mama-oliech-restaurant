@@ -100,7 +100,7 @@ export default function AdminPage() {
             <div className="min-h-screen bg-cream flex items-center justify-center px-4">
                 <div className="bg-white rounded-[2.5rem] shadow-2xl p-10 w-full max-w-md border border-terracotta-100">
                     <div className="flex justify-center mb-8">
-                        <img src="/logo.png" alt="Logo" className="w-20 h-20" />
+                        <img src="/logo.png" alt="Logo" className="w-20 h-20 mx-auto rounded-full mix-blend-multiply transition-transform hover:scale-110" />
                     </div>
                     <h1 className="font-display text-4xl font-bold text-charcoal mb-2 text-center">
                         Admin Login

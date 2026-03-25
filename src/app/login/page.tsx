@@ -84,10 +84,15 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen bg-cream flex flex-col justify-center py-12 pt-32 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-                <Link href="/" className="inline-block mb-6">
-                    <span className="font-display text-4xl font-bold tracking-tight text-charcoal">
-                        Mama Oliech Restaurant
-                    </span>
+                <Link href="/" className="inline-block mb-8">
+                    <Image
+                        src="/logo.png"
+                        alt="Mama Oliech Logo"
+                        width={120}
+                        height={120}
+                        className="mx-auto w-24 h-24 sm:w-28 sm:h-28 rounded-full mix-blend-multiply transition-transform hover:scale-105"
+                        priority
+                    />
                 </Link>
                 <h2 className="text-center text-3xl font-display font-bold tracking-tight text-charcoal">
                     {isLogin ? 'Sign in to your account' : 'Create a new account'}

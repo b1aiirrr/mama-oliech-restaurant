@@ -10,6 +10,9 @@ export async function POST(req: Request) {
         }
 
         const stripe = getStripe();
+        if (process.env.STRIPE_SECRET_KEY === 'placeholder' || !process.env.STRIPE_SECRET_KEY) {
+            return NextResponse.json({ error: 'Stripe is currently in demo mode. Please set your STRIPE_SECRET_KEY in Vercel to enable real card payments.' }, { status: 400 });
+        }
         // Create Stripe Checkout Session
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],

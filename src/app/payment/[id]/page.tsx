@@ -437,7 +437,7 @@ export default function PaymentPage() {
                             {activeTab === 'airtm' && (
                                 <div className="space-y-10 animate-in slide-in-from-right-4 duration-500 py-4 text-center">
                                     <div className="space-y-4">
-                                        <img src="https://upload.wikimedia.org/wikipedia/en/3/3d/Airtm_logo.png" className="h-10 mx-auto" alt="Airtm" />
+                                        <img src="https://airtm.com/wp-content/uploads/2023/12/logo-airtm.png" className="h-10 mx-auto" alt="Airtm" />
                                         <h3 className="text-2xl font-bold text-charcoal tracking-tight font-display">Pay with Airtm</h3>
                                         <p className="text-charcoal/50 text-sm max-w-xs mx-auto leading-relaxed">
                                             Use your Airtm balance to pay instantly using local currencies or crypto.

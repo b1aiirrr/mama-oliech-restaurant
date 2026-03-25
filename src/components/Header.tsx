@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CartButton } from './CartButton';
+import { createClient } from '@/utils/supabase/client';
+import { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
 
 const navLinks = [
   { href: '#menu', label: 'Menu' },
@@ -14,6 +16,24 @@ const navLinks = [
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-cream/95 backdrop-blur-sm border-b border-terracotta-200/50">
@@ -50,11 +70,22 @@ export function Header() {
           </ul>
 
           {/* Global Actions (Always visible) */}
-          <div className="flex items-center gap-1 sm:gap-4 pr-1 sm:pr-0">
-            <div className="hidden sm:block">
-              <Link href="#menu" className="btn-primary text-sm py-2 px-6">
-                View Menu
-              </Link>
+          <div className="flex items-center gap-2 sm:gap-4 pr-1 sm:pr-0">
+            <div className="hidden sm:flex items-center gap-3">
+              {user ? (
+                <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-charcoal/70 bg-gray-100 px-3 py-1.5 rounded-full">
+                        {user.email?.split('@')[0]}
+                    </span>
+                    <button onClick={handleLogout} className="text-sm font-bold text-terracotta-600 hover:text-terracotta-700 transition-colors">
+                        Logout
+                    </button>
+                </div>
+              ) : (
+                <Link href="/login" className="btn-primary text-sm py-2 px-6">
+                    Sign In
+                </Link>
+              )}
             </div>
 
             <CartButton />
@@ -101,14 +132,28 @@ export function Header() {
                     </Link>
                   </li>
                 ))}
-                <li className="pt-2 sm:hidden">
-                  <Link
-                    href="#menu"
-                    onClick={() => setMenuOpen(false)}
-                    className="block btn-primary text-center w-full"
-                  >
-                    View Menu
-                  </Link>
+                <li className="pt-2 sm:hidden border-t border-terracotta-200/50 mt-2">
+                  {user ? (
+                    <div className="space-y-3">
+                        <div className="text-charcoal font-medium text-center py-2">
+                            Signed in as {user.email?.split('@')[0]}
+                        </div>
+                        <button
+                            onClick={() => { handleLogout(); setMenuOpen(false); }}
+                            className="block w-full text-center py-3 text-terracotta-600 font-bold hover:bg-terracotta-50 rounded-lg transition-colors"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                  ) : (
+                    <Link
+                        href="/login"
+                        onClick={() => setMenuOpen(false)}
+                        className="block btn-primary text-center w-full"
+                    >
+                        Sign In / Register
+                    </Link>
+                  )}
                 </li>
               </ul>
             </motion.div>

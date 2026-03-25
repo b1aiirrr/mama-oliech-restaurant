@@ -1,0 +1,28 @@
+
+> mama-oliech-restaurant@1.0.0 build
+> next build
+
+  Γû▓ Next.js 14.2.35
+  - Environments: .env.local, .env.production
+
+   Creating an optimized production build ...
+Failed to compile.
+
+./src/utils/supabase/client.ts
+Module not found: Can't resolve '@supabase/ssr'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/login/page.tsx
+
+./src/utils/supabase/server.ts
+Module not found: Can't resolve '@supabase/ssr'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/auth/callback/route.ts
+
+
+> Build failed because of webpack errors

@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
@@ -12,8 +14,9 @@ export default function PaymentPage() {
 
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'stk' | 'qr'>('stk');
+    const [activeTab, setActiveTab] = useState<'stk' | 'qr' | 'stripe' | 'airtm'>('stk');
     const [paying, setPaying] = useState(false);
+    const [stripeLoading, setStripeLoading] = useState(false);
     const [error, setError] = useState('');
     const [qrCodeImage, setQrCodeImage] = useState<string | null>(null);
     const [qrLoading, setQrLoading] = useState(false);
@@ -103,7 +106,34 @@ export default function PaymentPage() {
         }
     };
 
-    const handleTabChange = (tab: 'stk' | 'qr') => {
+    const handleStripeClick = async () => {
+        setStripeLoading(true);
+        setError('');
+        try {
+            const res = await fetch('/api/stripe/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    order_id: order!.id,
+                    amount: order!.total_amount,
+                    email: order!.customer_email
+                })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to start Stripe checkout');
+            window.location.href = data.url;
+        } catch (err: any) {
+            setError(err.message);
+            setStripeLoading(false);
+        }
+    };
+
+    const handleAirtmClick = async () => {
+        // Airtm flow often involves a simple redirect or modal. Here we'll show a placeholder
+        setError('Airtm integration is currently in sandbox mode. Checkout not available for this currency yet.');
+    };
+
+    const handleTabChange = (tab: 'stk' | 'qr' | 'stripe' | 'airtm') => {
         setActiveTab(tab);
         if (tab === 'qr') fetchQrCode();
     };
@@ -214,38 +244,56 @@ export default function PaymentPage() {
                         <div className="p-8 sm:p-12 flex flex-col justify-start bg-gray-50/50">
                             
                             {/* Payment Tabs */}
-                            <div className="flex bg-gray-200/50 p-1 rounded-xl mb-8">
+                            <div className="flex bg-gray-200/50 p-1 rounded-2xl mb-8">
                                 <button 
                                     onClick={() => handleTabChange('stk')}
-                                    className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all ${activeTab === 'stk' ? 'bg-white text-charcoal shadow-sm' : 'text-charcoal/50 hover:text-charcoal'}`}
+                                    className={`flex-1 py-3 text-xs font-bold rounded-[0.9rem] transition-all ${activeTab === 'stk' ? 'bg-white text-charcoal shadow-md scale-[1.02]' : 'text-charcoal/50 hover:text-charcoal'}`}
                                 >
-                                    Phone Prompt
+                                    STK Push
                                 </button>
                                 <button 
                                     onClick={() => handleTabChange('qr')}
-                                    className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all ${activeTab === 'qr' ? 'bg-white text-charcoal shadow-sm' : 'text-charcoal/50 hover:text-charcoal'}`}
+                                    className={`flex-1 py-3 text-xs font-bold rounded-[0.9rem] transition-all ${activeTab === 'qr' ? 'bg-white text-charcoal shadow-md scale-[1.02]' : 'text-charcoal/50 hover:text-charcoal'}`}
                                 >
                                     Scan QR
                                 </button>
+                                <button 
+                                    onClick={() => handleTabChange('stripe')}
+                                    className={`flex-1 py-3 text-xs font-bold rounded-[0.9rem] transition-all ${activeTab === 'stripe' ? 'bg-white text-charcoal shadow-md scale-[1.02]' : 'text-charcoal/50 hover:text-charcoal'}`}
+                                >
+                                    Card
+                                </button>
+                                <button 
+                                    onClick={() => handleTabChange('airtm')}
+                                    className={`flex-1 py-3 text-xs font-bold rounded-[0.9rem] transition-all ${activeTab === 'airtm' ? 'bg-white text-charcoal shadow-md scale-[1.02]' : 'text-charcoal/50 hover:text-charcoal'}`}
+                                >
+                                    Airtm
+                                </button>
                             </div>
+
+                            {(activeTab === 'stk' || activeTab === 'qr') && (
+                                <div className="text-center mb-6">
+                                    <span className="text-[10px] font-bold text-terracotta-600 bg-terracotta-50 px-3 py-1 rounded-full uppercase tracking-tighter">Powered by M-Pesa</span>
+                                </div>
+                            )}
 
                             {activeTab === 'stk' && (
                                 !paying ? (
-                                    <div className="space-y-8 animate-in fade-in duration-300">
+                                    <div className="space-y-8 animate-in slide-in-from-bottom-2 duration-500">
                                         <div className="space-y-4">
-                                            <h3 className="text-xl font-bold text-charcoal">Instructions</h3>
-                                            <div className="space-y-4 text-charcoal/70">
-                                                <p className="flex items-start gap-3">
-                                                    <span className="font-bold text-terracotta-600">01.</span>
-                                                    Ensure your phone <strong>{order.customer_phone}</strong> is unlocked and has enough balance.
+                                            <h3 className="text-xl font-bold text-charcoal tracking-tight">STK Push Instructions</h3>
+                                            <div className="space-y-4 text-charcoal/70 text-sm leading-relaxed">
+                                                <p className="flex items-start gap-4">
+                                                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-terracotta-100 text-terracotta-600 flex items-center justify-center font-bold text-xs ring-4 ring-terracotta-50">1</span>
+                                                    Unlock your phone <strong>{order.customer_phone}</strong>.
                                                 </p>
-                                                <p className="flex items-start gap-3">
-                                                    <span className="font-bold text-terracotta-600">02.</span>
-                                                    Click the button below to receive an M-Pesa STK push.
+                                                <p className="flex items-start gap-4">
+                                                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-terracotta-100 text-terracotta-600 flex items-center justify-center font-bold text-xs ring-4 ring-terracotta-50">2</span>
+                                                    Click below to trigger the secure M-Pesa prompt.
                                                 </p>
-                                                <p className="flex items-start gap-3">
-                                                    <span className="font-bold text-terracotta-600">03.</span>
-                                                    Enter your M-Pesa PIN when prompted on your phone.
+                                                <p className="flex items-start gap-4">
+                                                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-terracotta-100 text-terracotta-600 flex items-center justify-center font-bold text-xs ring-4 ring-terracotta-50">3</span>
+                                                    Enter your PIN to complete the <strong>{formatPrice(order.total_amount)}</strong> payment.
                                                 </p>
                                             </div>
                                         </div>
@@ -259,67 +307,65 @@ export default function PaymentPage() {
                                         <div className="space-y-4">
                                             <button
                                                 onClick={initiateMpesaPayment}
-                                                className="btn-primary w-full py-4 text-lg rounded-xl shadow-xl shadow-terracotta-600/20 active:scale-[0.98] transition-all"
+                                                className="btn-primary w-full py-5 text-lg rounded-2xl shadow-2xl shadow-terracotta-600/30 active:scale-[0.98] transition-all flex items-center justify-center gap-3"
                                             >
-                                                Send M-Pesa Prompt
+                                                <span>Send M-Pesa Prompt</span>
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                                                </svg>
                                             </button>
                                             <button
                                                 onClick={() => router.push('/')}
-                                                className="w-full py-4 text-charcoal/40 hover:text-charcoal font-bold uppercase tracking-widest text-xs transition-colors"
+                                                className="w-full py-4 text-charcoal/30 hover:text-charcoal font-bold uppercase tracking-widest text-[10px] transition-colors"
                                             >
-                                                Cancel Order
+                                                Cancel and Return
                                             </button>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="text-center space-y-8 animate-in fade-in zoom-in duration-500 mt-10">
+                                    <div className="text-center space-y-10 animate-in fade-in zoom-in duration-700 mt-6">
                                         <div className="relative inline-block">
-                                            <div className="animate-ping absolute inset-0 rounded-full bg-terracotta-500/20 h-full w-full"></div>
-                                            <div className="relative p-6 bg-white rounded-full shadow-xl border-4 border-terracotta-100">
-                                                <svg className="w-12 h-12 text-terracotta-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <div className="animate-ping absolute inset-0 rounded-full bg-terracotta-500/20 h-full w-full speed-slow"></div>
+                                            <div className="relative p-8 bg-white rounded-full shadow-2xl border-4 border-terracotta-50">
+                                                <div className="w-16 h-16 rounded-full border-t-4 border-terracotta-600 animate-spin"></div>
+                                                <svg className="w-8 h-8 text-terracotta-600 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                                 </svg>
                                             </div>
                                         </div>
-                                        <div>
-                                            <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-4">Awaiting PIN...</h3>
-                                            <p className="text-charcoal/60 leading-relaxed text-base">
-                                                An M-Pesa prompt has been sent to <br />
-                                                <span className="text-charcoal font-bold text-lg">{order.customer_phone}</span>
+                                        <div className="space-y-2">
+                                            <h3 className="text-2xl font-bold text-charcoal tracking-tight">Secure Connection...</h3>
+                                            <p className="text-charcoal/50 text-base">
+                                                We've sent a prompt to <strong>{order.customer_phone}</strong>.<br />
+                                                Please check your phone screen.
                                             </p>
                                         </div>
                                         {error && (
                                             <div className="bg-red-50 border-l-4 border-red-500 p-4 text-red-700 font-medium text-sm rounded-r-xl text-left">
                                                 {error}
+                                                <button onClick={() => setPaying(false)} className="block mt-2 text-terracotta-600 font-bold underline">Try again</button>
                                             </div>
                                         )}
-                                        <div className="flex justify-center gap-2">
-                                            <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce [animation-delay:-0.3s]"></div>
-                                            <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce [animation-delay:-0.15s]"></div>
-                                            <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-bounce"></div>
-                                        </div>
-                                        <div className="space-y-4">
-                                            <p className="text-xs text-charcoal/40 font-medium uppercase tracking-widest">
-                                                System will automatically confirm once paid
-                                            </p>
-                                            {error && (
-                                                <button onClick={() => setPaying(false)} className="text-terracotta-600 text-sm font-bold border-b border-terracotta-600">Try Again</button>
-                                            )}
+                                        <div className="flex justify-center gap-3">
+                                            <div className="w-2.5 h-2.5 rounded-full bg-terracotta-600 animate-pulse"></div>
+                                            <div className="w-2.5 h-2.5 rounded-full bg-terracotta-400 animate-pulse [animation-delay:200ms]"></div>
+                                            <div className="w-2.5 h-2.5 rounded-full bg-terracotta-200 animate-pulse [animation-delay:400ms]"></div>
                                         </div>
                                     </div>
                                 )
                             )}
 
                             {activeTab === 'qr' && (
-                                <div className="space-y-8 animate-in fade-in duration-300">
+                                <div className="space-y-8 animate-in slide-in-from-right-2 duration-500">
                                     <div className="text-center space-y-4">
-                                        <h3 className="text-xl font-bold text-charcoal">Scan to Pay</h3>
-                                        <p className="text-charcoal/70 text-sm">Open your M-Pesa or MySafaricom App on your phone and scan the QR code below.</p>
+                                        <h3 className="text-xl font-bold text-charcoal tracking-tight">Scan QR to Pay</h3>
+                                        <p className="text-charcoal/60 text-sm leading-relaxed">Open your M-Pesa or MySafaricom App and scan the dynamic code below.</p>
                                     </div>
 
                                     {qrLoading ? (
-                                        <div className="flex justify-center items-center py-12">
-                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-terracotta-600"></div>
+                                        <div className="flex flex-col items-center justify-center py-16 space-y-4">
+                                            <div className="w-16 h-16 rounded-full border-t-4 border-terracotta-600 animate-spin"></div>
+                                            <p className="text-charcoal/40 text-xs font-bold uppercase tracking-widest">Generating Code...</p>
                                         </div>
                                     ) : qrError ? (
                                         <div className="bg-red-50 border-l-4 border-red-500 p-4 text-red-700 font-medium text-sm rounded-r-xl">
@@ -327,23 +373,93 @@ export default function PaymentPage() {
                                             <button onClick={fetchQrCode} className="ml-4 underline font-bold">Retry</button>
                                         </div>
                                     ) : qrCodeImage ? (
-                                        <div className="flex flex-col items-center space-y-6">
-                                            <div className="p-4 bg-white rounded-2xl shadow-xl border-2 border-gray-100 relative group">
-                                                <img src={qrCodeImage} alt="M-Pesa Dynamic QR" className="w-48 h-48 object-contain rounded-lg" />
+                                        <div className="flex flex-col items-center space-y-8">
+                                            <div className="p-6 bg-white rounded-3xl shadow-2xl border-4 border-gray-50 relative group transition-transform hover:scale-[1.02]">
+                                                <img src={qrCodeImage} alt="M-Pesa Dynamic QR" className="w-56 h-56 object-contain rounded-xl" />
+                                                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors pointer-events-none"></div>
                                             </div>
-                                            <div className="flex items-center gap-3 text-terracotta-600 bg-terracotta-50 px-4 py-2 rounded-full">
-                                                <div className="w-2 h-2 rounded-full bg-terracotta-600 animate-ping"></div>
-                                                <p className="text-sm font-bold uppercase tracking-widest">Awaiting Payment...</p>
+                                            <div className="flex items-center gap-4 text-terracotta-600 bg-terracotta-50 px-6 py-3 rounded-2xl ring-4 ring-terracotta-50/50">
+                                                <div className="w-2.5 h-2.5 rounded-full bg-terracotta-600 animate-ping"></div>
+                                                <p className="text-sm font-bold uppercase tracking-widest">Awaiting Scan...</p>
                                             </div>
                                         </div>
                                     ) : null}
+                                </div>
+                            )}
+
+                            {activeTab === 'stripe' && (
+                                <div className="space-y-10 animate-in slide-in-from-right-4 duration-500 py-4">
+                                    <div className="text-center space-y-4">
+                                        <div className="flex justify-center gap-4 mb-4 opacity-50 grayscale group-hover:grayscale-0 transition-all">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" className="h-6" alt="Stripe" />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-charcoal tracking-tight">Pay securely by Card</h3>
+                                        <p className="text-charcoal/50 text-sm max-w-xs mx-auto">We accept Visa, Mastercard, American Express, Apple Pay, and Google Pay.</p>
+                                    </div>
+
+                                    {error && (
+                                        <div className="bg-red-50 border-l-4 border-red-500 p-4 text-red-700 font-medium text-sm rounded-r-xl">
+                                            {error}
+                                        </div>
+                                    )}
+
+                                    <div className="space-y-6">
+                                        <button
+                                            onClick={handleStripeClick}
+                                            disabled={stripeLoading}
+                                            className="w-full bg-[#635BFF] hover:bg-[#5851e0] text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-blue-500/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
+                                        >
+                                            {stripeLoading ? (
+                                                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                            ) : (
+                                                <>
+                                                    <span>Secure Checkout</span>
+                                                    <svg className="w-6 h-6 opacity-80" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                                                </>
+                                            )}
+                                        </button>
+
+                                        <div className="flex flex-col items-center gap-4 pt-4 border-t border-gray-100">
+                                            <div className="flex gap-4">
+                                                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" className="h-4 opacity-30" alt="Visa" />
+                                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" className="h-4 opacity-30" alt="Mastercard" />
+                                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" className="h-4 opacity-30" alt="PayPal" />
+                                            </div>
+                                            <p className="text-[10px] text-gray-400 font-medium flex items-center gap-2">
+                                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 13a3 3 0 110-6 3 3 0 010 6z"/></svg>
+                                                AES-256 BANK-LEVEL SECURITY
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'airtm' && (
+                                <div className="space-y-10 animate-in slide-in-from-right-4 duration-500 py-4 text-center">
+                                    <div className="space-y-4">
+                                        <img src="https://upload.wikimedia.org/wikipedia/en/3/3d/Airtm_logo.png" className="h-10 mx-auto" alt="Airtm" />
+                                        <h3 className="text-2xl font-bold text-charcoal tracking-tight font-display">Pay with Airtm</h3>
+                                        <p className="text-charcoal/50 text-sm max-w-xs mx-auto leading-relaxed">
+                                            Use your Airtm balance to pay instantly using local currencies or crypto.
+                                        </p>
+                                    </div>
+
+                                    {error && (
+                                        <div className="bg-red-50 border-l-4 border-red-500 p-4 text-red-700 font-medium text-sm rounded-r-xl">
+                                            {error}
+                                        </div>
+                                    )}
 
                                     <button
-                                        onClick={() => router.push('/')}
-                                        className="w-full py-4 text-charcoal/40 hover:text-charcoal font-bold uppercase tracking-widest text-xs transition-colors mt-8"
+                                        onClick={handleAirtmClick}
+                                        className="w-full bg-[#00AEEF] hover:bg-[#009bd1] text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-cyan-500/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
                                     >
-                                        Cancel Order
+                                        Connect Airtm Account
                                     </button>
+
+                                    <p className="text-[10px] text-charcoal/30 flex items-center justify-center gap-2 font-bold uppercase tracking-widest">
+                                        Redirects to secure login
+                                    </p>
                                 </div>
                             )}
                         </div>

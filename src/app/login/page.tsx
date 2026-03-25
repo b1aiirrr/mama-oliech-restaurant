@@ -35,14 +35,23 @@ export default function LoginPage() {
                 router.push('/');
                 router.refresh(); // Refresh server components to pick up new cookie
             } else {
-                const { error } = await supabase.auth.signUp({
+                const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
                     options: {
                         emailRedirectTo: `${location.origin}/auth/callback`,
                     },
                 });
+                
                 if (error) throw error;
+
+                // Even if Supabase doesn't return an error (due to privacy settings),
+                // we can check if the user already has identities.
+                if (data?.user && data.user.identities && data.user.identities.length === 0) {
+                    setError('An account with this email already exists. Please sign in instead.');
+                    return;
+                }
+
                 setMsg('Success! Check your email to confirm your account.');
             }
         } catch (err: any) {

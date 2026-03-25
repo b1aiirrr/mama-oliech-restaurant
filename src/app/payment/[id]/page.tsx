@@ -14,7 +14,7 @@ export default function PaymentPage() {
 
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'stk' | 'qr' | 'stripe'>('stk');
+    const [activeTab, setActiveTab] = useState<'stk' | 'qr' | 'stripe' | 'airtel'>('stk');
     const [paying, setPaying] = useState(false);
     const [stripeLoading, setStripeLoading] = useState(false);
     const [error, setError] = useState('');
@@ -133,7 +133,11 @@ export default function PaymentPage() {
         setError('Airtm integration is currently in sandbox mode. Checkout not available for this currency yet.');
     };
 
-    const handleTabChange = (tab: 'stk' | 'qr' | 'stripe') => {
+    const handleAirtelClick = async () => {
+        setError('Airtel Money integration is pending. Please use M-Pesa or Card for now.');
+    };
+
+    const handleTabChange = (tab: 'stk' | 'qr' | 'stripe' | 'airtel') => {
         setActiveTab(tab);
         setError('');
         if (tab === 'qr') fetchQrCode();
@@ -260,9 +264,15 @@ export default function PaymentPage() {
                                 </button>
                                 <button 
                                     onClick={() => handleTabChange('stripe')}
-                                    className={`flex-1 py-3 text-xs font-bold rounded-[0.9rem] transition-all ${activeTab === 'stripe' ? 'bg-white text-charcoal shadow-md scale-[1.02]' : 'text-charcoal/50 hover:text-charcoal'}`}
+                                    className={`flex-1 py-3 text-[10px] font-bold rounded-[0.9rem] transition-all ${activeTab === 'stripe' ? 'bg-white text-charcoal shadow-md scale-[1.02]' : 'text-charcoal/50 hover:text-charcoal'}`}
                                 >
                                     Card
+                                </button>
+                                <button 
+                                    onClick={() => handleTabChange('airtel')}
+                                    className={`flex-1 py-3 text-[10px] font-bold rounded-[0.9rem] transition-all ${activeTab === 'airtel' ? 'bg-white text-charcoal shadow-md scale-[1.02]' : 'text-charcoal/50 hover:text-charcoal'}`}
+                                >
+                                    Airtel
                                 </button>
                             </div>
 
@@ -416,7 +426,7 @@ export default function PaymentPage() {
 
                                         <div className="flex flex-col items-center gap-4 pt-6 mt-4 border-t border-gray-100/50">
                                             <div className="flex items-center gap-5 opacity-40">
-                                                <img src="https://raw.githubusercontent.com/aaronfriel/stripe-payment-icons/master/dist/svg/visa.svg" className="h-2.5" alt="Visa" />
+                                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 32'%3E%3Cpath fill='%231a1f71' d='M35 0h-5.4c-.4 0-.8.2-1 .6l-7.4 17.6L18.8 3.8C18.6 1.4 16.4 0 14.1 0H0l-.2.6c2.8.7 5.4 1.8 7.4 3.1 1.2.8 1.6 1.4 1.9 2.5L16.2 32h5.8L31.1 9.4 35 32H42L35 0zm19.6 19.3c.1-4.7-6.5-5-6.5-8.5 0-1.1 1-1.9 2.1-1.9 1.6 0 2.7.4 3.5.8l.4.2.8-5c-1.1-.4-2.5-.8-4.1-.8-5.9 0-10.1 3.1-10.2 7.7 0 3.3 3 5.2 5.2 6.3 2.3 1.1 3 1.8 3 2.8 0 1.5-1.9 2.2-3.6 2.2-2.4 0-3.8-.4-5.8-1.3l-.7-.4-.8 5c1.6.7 4.5 1.3 7 1.3 6.3 0 10.3-3.1 10.3-7.7zM66.4 10.3c.5-.1 1-.1 1.5-.1 3.5 0 6.6 1.5 8.1 4.5l.3.6L79.4 0h-6.2l-3.3 15.6c-.7-3.1-2.3-5.3-3.5-5.3zM99.8.6L94.3 32h-5.4L83.4.6h6l2.7 18.2L94.8.6z'/%3E%3C/svg%3E" className="h-2.5" alt="Visa" />
                                                 <img src="https://raw.githubusercontent.com/aaronfriel/stripe-payment-icons/master/dist/svg/mastercard.svg" className="h-5" alt="Mastercard" />
                                             </div>
                                             <div className="flex items-center gap-2 text-[9px] font-bold text-gray-400 tracking-[0.2em] uppercase">
@@ -425,6 +435,37 @@ export default function PaymentPage() {
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'airtel' && (
+                                <div className="space-y-10 animate-in slide-in-from-right-4 duration-500 py-4 text-center">
+                                    <div className="space-y-4">
+                                        <div className="w-16 h-16 bg-red-600 rounded-full mx-auto flex items-center justify-center text-white font-bold text-xl shadow-lg ring-4 ring-red-50">
+                                            A
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-charcoal tracking-tight font-display">Pay with Airtel Money</h3>
+                                        <p className="text-charcoal/50 text-sm max-w-xs mx-auto leading-relaxed">
+                                            Use your Airtel Money account to pay securely.
+                                        </p>
+                                    </div>
+
+                                    {error && (
+                                        <div className="bg-red-50 border-l-4 border-red-500 p-4 text-red-700 font-medium text-sm rounded-r-xl text-left">
+                                            {error}
+                                        </div>
+                                    )}
+
+                                    <button
+                                        onClick={handleAirtelClick}
+                                        className="w-full bg-[#E30613] hover:bg-[#c40510] text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-red-500/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
+                                    >
+                                        Trigger Airtel Prompt
+                                    </button>
+
+                                    <p className="text-[10px] text-charcoal/30 flex items-center justify-center gap-2 font-bold uppercase tracking-widest">
+                                        Secure Mobile Payment
+                                    </p>
                                 </div>
                             )}
                         </div>

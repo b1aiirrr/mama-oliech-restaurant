@@ -46,7 +46,13 @@ export default function LoginPage() {
                 setMsg('Success! Check your email to confirm your account.');
             }
         } catch (err: any) {
-            setError(err.message);
+            let message = err.message;
+            if (message.includes('already registered')) {
+                message = 'An account with this email already exists. Please sign in instead.';
+            } else if (message.includes('SMTP') || message.includes('confirmation email')) {
+                message = 'Email delivery failed. Please check your SMTP settings in Supabase (Host: smtp.gmail.com, Port: 587) and ensure your App Password is correct.';
+            }
+            setError(message);
         } finally {
             setLoading(false);
         }
